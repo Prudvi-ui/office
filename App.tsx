@@ -1,45 +1,83 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Splash from './Asserts/Screens/Splash';
+import Login from './Asserts/Screens/Login';
+import Clients from './Asserts/Screens/Clients';
+import Categories from './Asserts/Screens/Categories';
+import Marketing from './Asserts/Screens/Marketing';
+import DigitalMaketing from './Asserts/Screens/DigitalMaketing';
+import AppDevelopment from './Asserts/Screens/AppDevelopment';
+import WebDevelopment from './Asserts/Screens/WebDevelopment';
+import SingleEmployee from './Asserts/Screens/SingleEmployee';
+import SingleClient from './Asserts/Screens/SingleClient';
+import Notification from './Asserts/Screens/Notification';
+import AppAndWeb from './Asserts/Screens/AppAndWeb';
+import PastProjects from './Asserts/Screens/PastProjects';
+import ActiveProjects from './Asserts/Screens/ActiveProjects';
+import Employees from './Asserts/Screens/Employees';
+import AWActive from './Asserts/Screens/AWActive';
+import AWPast from './Asserts/Screens/AWPast';
+import AActive from './Asserts/Screens/AActive';
+import APast from './Asserts/Screens/APast';
+import WActive from './Asserts/Screens/WActive';
+import WPast from './Asserts/Screens/WPast';
+import MarketingList from './Asserts/Screens/MarketingList';
+import Employeecategories from './Asserts/Screens/Employeecategories';
+import Epmprofile from './Asserts/Screens/Epmprofile'
+import Employeeattendance from './Asserts/Screens/Employeeattendance'
+import Leaverequest from './Asserts/Screens/Leaverequest'
+import Projects from './Asserts/Screens/Projects'
+import Emptasks from './Asserts/Screens/Emptasks'
+import holiday from './Asserts/Screens/holiday'
+import Notices from './Asserts/Screens/Notices'
+import Support from './Asserts/Screens/Support'
+import Performance from './Asserts/Screens/Performance'
+import Settings from './Asserts/Screens/Settings'
+const Stack = createStackNavigator();
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+export default function App() {
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Clients" component={Clients} />
+        <Stack.Screen name="Marketing" component={Marketing} />
+        <Stack.Screen name="Categories" component={Categories} />
+        <Stack.Screen name="DigitalMaketing" component={DigitalMaketing} />
+        <Stack.Screen name="AppDevelopment" component={AppDevelopment} />
+        <Stack.Screen name="WebDevelopment" component={WebDevelopment} />
+        <Stack.Screen name="ActiveProjects" component={ActiveProjects} />
+        <Stack.Screen name="PastProjects" component={PastProjects} />
+        <Stack.Screen name="AppAndWeb" component={AppAndWeb} />
+        <Stack.Screen name="Employees" component={Employees} />
+        <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="SingleClient" component={SingleClient} />
+        <Stack.Screen name="SingleEmployee" component={SingleEmployee} />
+        <Stack.Screen name="AWActive" component={AWActive} />
+        <Stack.Screen name="AWPast" component={AWPast} />
+        <Stack.Screen name="WActive" component={WActive} />
+        <Stack.Screen name="WPast" component={WPast} />
+        <Stack.Screen name="AActive" component={AActive} />
+        <Stack.Screen name="APast" component={APast} />
+        <Stack.Screen name="MarketingList" component={MarketingList} />
+        <Stack.Screen name="Employeecategories" component={Employeecategories} />
+        <Stack.Screen name="Epmprofile" component={Epmprofile} />
+        <Stack.Screen name="Employeeattendance" component={Employeeattendance} />
+        <Stack.Screen name="Leaverequest" component={Leaverequest} />
+        <Stack.Screen name="Projects" component={Projects} />
+        <Stack.Screen name="Emptasks" component={Emptasks} />
+        <Stack.Screen name="holiday" component={holiday} />
+        <Stack.Screen name="Notices" component={Notices} />
+        <Stack.Screen name="Support" component={Support} />
+        <Stack.Screen name="Performance" component={Performance} />
+        <Stack.Screen name="Settings" component={Settings} />
+
+
+
+
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;
