@@ -8,7 +8,7 @@ import {
   TextInput,
   Platform,
   Modal,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
@@ -25,13 +25,13 @@ const defaultData = [
 ];
 
 const iconMap = {
-  'Marketing': 'bullhorn',
-  'Clients': 'account-group',
+  Marketing: 'bullhorn',
+  Clients: 'account-group',
   'Digital Marketing': 'chart-line',
   'App & Web Development': 'web',
   'App Development': 'cellphone',
   'Web Development': 'laptop',
-  'Employee': 'account-tie',
+  Employee: 'account-tie',
 };
 
 export default function Categories({ navigation, route }) {
@@ -101,7 +101,6 @@ export default function Categories({ navigation, route }) {
             }),
           }}
         >
-          {/* Icon */}
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Icon
               name={iconName}
@@ -111,7 +110,6 @@ export default function Categories({ navigation, route }) {
             />
           </View>
 
-          {/* Title */}
           <Text
             style={{
               fontSize: 15,
@@ -123,7 +121,6 @@ export default function Categories({ navigation, route }) {
             {item.title}
           </Text>
 
-          {/* Delete icon */}
           {item.isRemovable && isAdmin && (
             <TouchableOpacity
               onPress={() => removeCard(item.id)}
@@ -142,21 +139,30 @@ export default function Categories({ navigation, route }) {
     );
   };
 
+  // ✅ Fixed Back Button Logic
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        // Alert.alert('Exit App', 'Are you sure you want to exit?', [
-        //     { text: 'Cancel', style: 'cancel' },
-        //     { text: 'Yes', onPress: () => BackHandler.exitApp() },
-        // ]);
-        BackHandler.exitApp()
-        return true;
+        if (navigation.isFocused()) {
+          // Exit app only on this home screen
+          BackHandler.exitApp();
+          return true;
+        } else {
+          // Go back if on any other screen
+          navigation.goBack();
+          return true;
+        }
       };
 
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
       return () => backHandler.remove();
-    }, [])
+    }, [navigation])
   );
+
   return (
     <View style={{ flex: 1, backgroundColor: '#0c1247' }}>
       {/* Header */}
@@ -171,14 +177,14 @@ export default function Categories({ navigation, route }) {
         }}
       >
         <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginTop: 20 }}>
-     
+          Dashboard
         </Text>
         <Icon
           onPress={() => navigation.navigate('Notification')}
           name="bell"
           size={30}
           color="white"
-          marginTop={20}
+          style={{ marginTop: 20 }}
         />
       </View>
 
@@ -196,24 +202,6 @@ export default function Categories({ navigation, route }) {
           />
         </View>
       </ScrollView>
-
-      {/* Admin FAB */}
-      {/* {isAdmin && (
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={{
-            position: 'absolute',
-            bottom: 30,
-            right: 30,
-            backgroundColor: '#0c1247',
-            padding: 16,
-            borderRadius: 100,
-            elevation: 10,
-          }}
-        >
-          <Icon name="plus" color="white" size={28} />
-        </TouchableOpacity>
-      )} */}
 
       {/* Modal for Adding Cards */}
       <Modal
@@ -239,7 +227,9 @@ export default function Categories({ navigation, route }) {
               elevation: 10,
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0c1247' }}>
+            <Text
+              style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0c1247' }}
+            >
               Add New Card
             </Text>
             <TextInput

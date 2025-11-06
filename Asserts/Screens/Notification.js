@@ -82,7 +82,7 @@ export default function NotificationScreen({ route, navigation }) {
             }}
           >
             <Text style={{ color: '#0c1247', fontSize: 15 }}>
-              • {note.message}
+              {note.message}
             </Text>
             <Text style={{ color: '#555', fontSize: 12, marginTop: 4 }}>
               Until: {note.until}

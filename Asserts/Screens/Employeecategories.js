@@ -1,4 +1,4 @@
-import React ,{useCallback}from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -19,35 +19,41 @@ export default function CategoriesScreen({ navigation }) {
     { id: 3, name: 'Leave Management', icon: 'calendar-clock', nav: 'Leaverequest' },
     { id: 4, name: 'Projects', icon: 'folder-account', nav: 'Projects' },
     { id: 5, name: 'Tasks', icon: 'clipboard-check-outline', nav: 'Emptasks' },
-    // { id: 6, name: 'Salary Details', icon: 'cash-multiple', nav: 'SalaryDetails' },
-    // { id: 7, name: 'Team', icon: 'account-group', nav: 'TeamList' },
     { id: 8, name: 'Holidays', icon: 'calendar-star', nav: 'holiday' },
     { id: 9, name: 'Notices', icon: 'bullhorn-outline', nav: 'Notices' },
     { id: 10, name: 'Support', icon: 'headset', nav: 'Support' },
     { id: 11, name: 'Performance', icon: 'chart-line', nav: 'Performance' },
     { id: 12, name: 'Settings', icon: 'cog-outline', nav: 'Settings' },
   ];
-    useFocusEffect(
-        useCallback(() => {
-            const onBackPress = () => {
-                // Alert.alert('Exit App', 'Are you sure you want to exit?', [
-                //     { text: 'Cancel', style: 'cancel' },
-                //     { text: 'Yes', onPress: () => BackHandler.exitApp() },
-                // ]);
-                BackHandler.exitApp()
-                return true;
-            };
 
-            const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-            return () => backHandler.remove();
-        }, [])
-    );
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // Exit app only when on home screen
+        if (navigation.isFocused()) {
+          BackHandler.exitApp();
+          return true;
+        } else {
+          navigation.goBack();
+          return true;
+        }
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => backHandler.remove();
+    }, [navigation])
+  );
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#001F54" barStyle="light-content" />
       <View style={styles.header}>
         <TouchableOpacity style={{ marginTop: 20 }} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={26} color="#fff" />
+        <Text style={styles.headerTitle}></Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Employee Categories</Text>
         <Text style={styles.headerTitle}></Text>
@@ -77,14 +83,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#001F54',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    backgroundColor: '#001F54'
+    backgroundColor: '#001F54',
   },
-  headerTitle: { color: "white", fontSize: 18, fontWeight: "600", marginTop: 20 },
+  headerTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 20,
+  },
   container: {
     paddingVertical: 20,
     alignItems: 'center',

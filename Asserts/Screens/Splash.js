@@ -8,7 +8,7 @@ const Splash = ({ navigation }) => {
     const animateAndNavigate = () => {
       Animated.timing(scaleValue, {
         toValue: 1,
-        duration: 1000,
+        duration: 2000,
         useNativeDriver: true,
       }).start();
 

@@ -171,137 +171,137 @@ export default function Dashboard({ navigation }) {
                                 contentContainerStyle={styles.listRow}
                                 showsHorizontalScrollIndicator={false}
                             />
-                            </View>
+                        </View>
 
-                            {/* Today Task */}
-                            <View style={styles.sectionHeader}>
-                                <Text style={styles.sectionTitle}>Today Task</Text>
-                                <TouchableOpacity>
-                                    <Text style={styles.seeMore}>See More</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <FlatList
-                                data={taskData}
-                                horizontal
-                                keyExtractor={(item) => item.id}
-                                renderItem={renderTaskCard}
-                                contentContainerStyle={styles.listRow}
-                                showsHorizontalScrollIndicator={false}
-                            />
+                        {/* Today Task */}
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>Today Task</Text>
+                            <TouchableOpacity>
+                                <Text style={styles.seeMore}>See More</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <FlatList
+                            data={taskData}
+                            horizontal
+                            keyExtractor={(item) => item.id}
+                            renderItem={renderTaskCard}
+                            contentContainerStyle={styles.listRow}
+                            showsHorizontalScrollIndicator={false}
+                        />
 
-                            {/* Recent Activity */}
-                            <View style={styles.sectionHeader}>
-                                <Text style={styles.sectionTitle}>Recent Activity</Text>
-                                <TouchableOpacity>
-                                    <Text style={styles.seeMore}>View All</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </>
+                        {/* Recent Activity */}
+                        <View style={styles.sectionHeader}>
+                            <Text style={styles.sectionTitle}>Recent Activity</Text>
+                            <TouchableOpacity>
+                                <Text style={styles.seeMore}>View All</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </>
                 }
-                        data={activityData}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderActivityCard}
-                        contentContainerStyle={{ paddingBottom: 60 }}
-                        showsVerticalScrollIndicator={false}
+                data={activityData}
+                keyExtractor={(item) => item.id}
+                renderItem={renderActivityCard}
+                contentContainerStyle={{ paddingBottom: 60 }}
+                showsVerticalScrollIndicator={false}
             />
-                    </SafeAreaView>
-                );
+        </SafeAreaView>
+    );
 }
 
-                const styles = StyleSheet.create({
-                    container: {flex: 1, backgroundColor: '#001F54' },
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#001F54' },
 
-                // Header
-                header: {
-                    flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: '#001F54',
-                justifyContent: 'space-between',
-                paddingHorizontal: 15,
-                paddingVertical: 12,
-                marginTop: 20,
+    // Header
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#001F54',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+        marginTop: 20,
     },
-                headerTitle: {color: '#fff', fontSize: 18, fontWeight: '600' },
+    headerTitle: { color: '#fff', fontSize: 18, fontWeight: '600' },
 
-                profileSection: {
-                    flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 20,
+    profileSection: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 20,
     },
-                headerLeft: {flexDirection: 'row', alignItems: 'center' },
-                profileImg: {width: 45, height: 45, borderRadius: 25, marginRight: 10 },
-                welcome: {color: 'white', fontSize: 13 },
-                username: {color: 'white', fontSize: 16, fontWeight: '600' },
-                bellIcon: {
-                    backgroundColor: '#fff',
-                padding: 8,
-                borderRadius: 10,
-                elevation: 2,
-    },
-
-                listRow: {
-                    paddingHorizontal: 20,
+    headerLeft: { flexDirection: 'row', alignItems: 'center' },
+    profileImg: { width: 45, height: 45, borderRadius: 25, marginRight: 10 },
+    welcome: { color: 'white', fontSize: 13 },
+    username: { color: 'white', fontSize: 16, fontWeight: '600' },
+    bellIcon: {
+        backgroundColor: '#fff',
+        padding: 8,
+        borderRadius: 10,
+        elevation: 2,
     },
 
-                card: {
-                    backgroundColor: '#fff',
-                width: 150,
-                borderRadius: 12,
-                paddingVertical: 18,
-                paddingHorizontal: 15,
-                marginRight: 15,
-                marginVertical: 10,
-                elevation: 3,
-                alignItems: 'center',
+    listRow: {
+        paddingHorizontal: 20,
     },
-                cardIcon: {
-                    backgroundColor: '#EAF1FF',
-                padding: 8,
-                borderRadius: 8,
-                // alignSelf: 'flex-start',
-                alignItems: 'center'
+
+    card: {
+        backgroundColor: '#fff',
+        width: 150,
+        borderRadius: 12,
+        paddingVertical: 18,
+        paddingHorizontal: 15,
+        marginRight: 15,
+        marginVertical: 10,
+        elevation: 3,
+        alignItems: 'center',
+    },
+    cardIcon: {
+        backgroundColor: '#EAF1FF',
+        padding: 8,
+        borderRadius: 8,
+        // alignSelf: 'flex-start',
+        alignItems: 'center'
 
     },
-                timeText: {fontSize: 18, fontWeight: '700', color: '#000', marginTop: 10 },
-                label: {color: '#666', fontSize: 13, marginTop: 4 },
+    timeText: { fontSize: 18, fontWeight: '700', color: '#000', marginTop: 10 },
+    label: { color: '#666', fontSize: 13, marginTop: 4 },
 
-                sectionHeader: {
-                    flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: 20,
-                marginTop: 20,
-                alignItems: 'center',
+    sectionHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginTop: 20,
+        alignItems: 'center',
     },
-                sectionTitle: {fontSize: 17, fontWeight: '600', color: 'white' },
-                seeMore: {color: '#007AFF', fontSize: 13 },
+    sectionTitle: { fontSize: 17, fontWeight: '600', color: 'white' },
+    seeMore: { color: '#007AFF', fontSize: 13 },
 
-                taskCard: {
-                    width: 220,
-                borderRadius: 12,
-                padding: 15,
-                marginRight: 15,
-                marginVertical: 10,
+    taskCard: {
+        width: 220,
+        borderRadius: 12,
+        padding: 15,
+        marginRight: 15,
+        marginVertical: 10,
     },
-                taskTitle: {fontWeight: '600', fontSize: 14, color: '#000' },
-                taskRow: {flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-                taskDate: {fontSize: 12, color: '#555' },
-                taskDesc: {fontSize: 12, color: '#777', marginTop: 5 },
+    taskTitle: { fontWeight: '600', fontSize: 14, color: '#000' },
+    taskRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
+    taskDate: { fontSize: 12, color: '#555' },
+    taskDesc: { fontSize: 12, color: '#777', marginTop: 5 },
 
-                activityCard: {
-                    backgroundColor: '#fff',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 15,
-                marginHorizontal: 20,
-                marginVertical: 8,
-                borderRadius: 12,
-                elevation: 2,
+    activityCard: {
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 15,
+        marginHorizontal: 20,
+        marginVertical: 8,
+        borderRadius: 12,
+        elevation: 2,
     },
-                activityLeft: {flexDirection: 'row', alignItems: 'center', gap: 10 },
-                activityTitle: {fontSize: 14, fontWeight: '600', color: '#000' },
-                activitySub: {fontSize: 12, color: '#666' },
-                activityTime: {fontSize: 14, fontWeight: '600', color: '#000' },
-                activityStatus: {fontSize: 12, color: '#999', textAlign: 'right' },
+    activityLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    activityTitle: { fontSize: 14, fontWeight: '600', color: '#000' },
+    activitySub: { fontSize: 12, color: '#666' },
+    activityTime: { fontSize: 14, fontWeight: '600', color: '#000' },
+    activityStatus: { fontSize: 12, color: '#999', textAlign: 'right' },
 });

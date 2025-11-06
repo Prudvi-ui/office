@@ -16,18 +16,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 export default function EmployeeProfile({navigation}) {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('john.doe@example.com');
+  const [name, setName] = useState('prudvi');
+  const [email, setEmail] = useState('prudvi@example.com');
   const [empId, setEmpId] = useState('EMP1023');
-  const [empRole, setEmpRole] = useState('Software Engineer');
+  const [empRole, setEmpRole] = useState('Software Developer');
   const [contactNo, setContactNo] = useState('+91 9876543210');
-  const [salary, setSalary] = useState('₹65,000');
+  const [salary, setSalary] = useState('₹ 18000');
   const [pfAmount, setPfAmount] = useState('₹2,000');
   const [esiAmount, setEsiAmount] = useState('₹500');
   const [monthlyAttendance, setMonthlyAttendance] = useState('28 Days');
   const [paidLeaves, setPaidLeaves] = useState('2 Days');
   const [unpaidLeaves, setUnpaidLeaves] = useState('0 Days');
-  const [netTakePro, setNetTakePro] = useState('₹63,000');
+  const [netTakePro, setNetTakePro] = useState('₹16,000');
   const [joiningDate, setJoiningDate] = useState(new Date('2022-03-15'));
   const [image, setImage] = useState('https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -47,7 +47,7 @@ export default function EmployeeProfile({navigation}) {
   };
 
   const handleSave = () => {
-    Alert.alert('✅ Profile Saved', 'Employee profile saved successfully!');
+    navigation.goBack()
   };
 
   return (

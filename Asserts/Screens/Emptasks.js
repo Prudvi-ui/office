@@ -1,9 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ProjectTasks({ navigation }) {
-  const tasks = [
+  const [tasks, setTasks] = useState([
     {
       id: 1,
       title: 'Design UI',
@@ -31,7 +38,31 @@ export default function ProjectTasks({ navigation }) {
       status: 'Completed',
       color: '#27ae60',
     },
+  ]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const statusOptions = [
+    { label: 'To Do', color: '#e74c3c' },
+    { label: 'In Progress', color: '#f39c12' },
+    { label: 'Completed', color: '#27ae60' },
   ];
+
+  const openStatusModal = (task) => {
+    setSelectedTask(task);
+    setModalVisible(true);
+  };
+
+  const updateStatus = (newStatus) => {
+    const updatedTasks = tasks.map((t) =>
+      t.id === selectedTask.id
+        ? { ...t, status: newStatus.label, color: newStatus.color }
+        : t
+    );
+    setTasks(updatedTasks);
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -41,7 +72,7 @@ export default function ProjectTasks({ navigation }) {
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Project Tasks</Text>
-        <View style={{ width: 26 }} /> 
+        <View style={{ width: 26 }} />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingVertical: 20 }}>
@@ -54,9 +85,49 @@ export default function ProjectTasks({ navigation }) {
             <Text style={[styles.status, { color: task.color }]}>
               Status: {task.status}
             </Text>
+
+            {/* Status Update Button */}
+            <TouchableOpacity
+              style={styles.updateButton}
+              onPress={() => openStatusModal(task)}
+            >
+              <Icon name="pencil" size={16} color="#fff" />
+              <Text style={styles.updateText}>Update Status</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
+
+      {/* Status Update Modal */}
+      <Modal
+        transparent
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Select New Status</Text>
+            {statusOptions.map((opt) => (
+              <TouchableOpacity
+                key={opt.label}
+                style={styles.optionBtn}
+                onPress={() => updateStatus(opt)}
+              >
+                <Text style={[styles.optionText, { color: opt.color }]}>
+                  {opt.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -73,7 +144,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop:20
+    marginTop: 20,
   },
   headerTitle: {
     color: '#fff',
@@ -110,5 +181,57 @@ const styles = StyleSheet.create({
   status: {
     fontWeight: '600',
     marginTop: 8,
+  },
+  updateButton: {
+    backgroundColor: '#001F54',
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  updateText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalBox: {
+    backgroundColor: '#fff',
+    width: '80%',
+    borderRadius: 12,
+    padding: 20,
+    elevation: 6,
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 15,
+  },
+  optionBtn: {
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ccc',
+  },
+  optionText: {
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  closeBtn: {
+    marginTop: 12,
+    alignSelf: 'center',
+  },
+  closeText: {
+    color: '#007AFF',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

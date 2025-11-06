@@ -193,7 +193,7 @@ export default function Login({ navigation }) {
           </View>
 
           {/* Remember Me & Forgot Password */}
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
@@ -226,7 +226,7 @@ export default function Login({ navigation }) {
                 Forgot Password?
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           {/* Login Button */}
           <TouchableOpacity style={buttonStyle} onPress={handleLogin}>

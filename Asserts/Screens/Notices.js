@@ -75,7 +75,7 @@ export default function NoticeBoard({ navigation }) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notice Board</Text>
+        <Text style={styles.headerTitle}>Notice</Text>
         <View style={{ width: 26 }} /> {/* spacing placeholder */}
       </View>
 

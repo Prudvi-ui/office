@@ -180,8 +180,11 @@ export default function ClientProfileScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center' }}>
-        <Text style={{ fontSize: 25, color: '#0C1247', fontWeight: 'bold',marginTop:20 }}>Company Name</Text>
-        <TouchableOpacity style={{marginTop:20}} onPress={() => navigation.navigate('Notification', { notifications })}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={26} color="#001F54" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 25, color: '#0C1247', fontWeight: 'bold', marginTop: 20 }}>Company Name</Text>
+        <TouchableOpacity style={{ marginTop: 20 }} onPress={() => navigation.navigate('Notification', { notifications })}>
           <Icon name="bell" size={26} color="#0c1247" />
         </TouchableOpacity>
       </View>

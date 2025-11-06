@@ -4,19 +4,19 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const EmployeeProfile = ({ navigation }) => {
   const employee = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    name: 'prudvi',
+    email: 'prudvi@example.com',
     empId: 'EMP1023',
-    empRole: 'Software Engineer',
+    empRole: 'Software Develper',
     contactNo: '+91 9876543210',
-    salary: '₹65,000',
-    pfAmount: '₹2,000',
-    esiAmount: '₹500',
+    salary: '₹ 18,000',
+    pfAmount: '₹ 18,00',
+    esiAmount: '₹ 186',
     monthlyAttendance: '28 Days',
     paidLeaves: '2 Days',
     unpaidLeaves: '0 Days',
-    netTakePro: '₹63,000',
-    joiningDate: 'March 15, 2022',
+    netTakePro: '₹15,965',
+    joiningDate: 'October 03, 2022',
     image: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
   };
 
@@ -33,8 +33,18 @@ const EmployeeProfile = ({ navigation }) => {
 
       <ScrollView>
         {/* Profile Header */}
+
         <View style={styles.header}>
-          <Image source={{ uri: employee.image }} style={styles.profileImage} />
+          <View style={{flexDirection:'row',alignItems:"center",left:26}}>
+            <Image source={{ uri: employee.image }} style={styles.profileImage} />
+            <TouchableOpacity style={{ alignItems: 'flex-end', margin: 10 }} onPress={()=> navigation.navigate("SingleEmployee")}>
+              <Icon
+                name={"pencil"}
+                size={24}
+                color="#fff"
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.name}>{employee.name}</Text>
           <Text style={styles.email}>{employee.email}</Text>
         </View>
@@ -113,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     elevation: 4,
     paddingTop: 10,
-    marginTop:10
+    marginTop: 10
   },
   headerTitle: {
     color: '#fff',

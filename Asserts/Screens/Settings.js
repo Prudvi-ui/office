@@ -27,58 +27,58 @@ export default function EmployeeSettings({ navigation }) {
       {/* Content */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Profile Section */}
-        <TouchableOpacity style={styles.option}>
-          <Icon name="account-circle" size={24} color="#0c1247" />
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Epmprofile")}>
+          <Icon name="account-circle" size={24} color="orange" />
           <Text style={styles.optionText}>Profile Information</Text>
         </TouchableOpacity>
 
         {/* Notification Setting */}
         <View style={styles.optionSwitch}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name="bell" size={24} color="#0c1247" />
+            <Icon name="bell" size={24} color="orange" />
             <Text style={styles.optionText}>Enable Notifications</Text>
           </View>
           <Switch
             value={notificationsEnabled}
             onValueChange={setNotificationsEnabled}
-            thumbColor={notificationsEnabled ? '#0c1247' : '#ccc'}
+            thumbColor={notificationsEnabled ? 'orange' : '#fff'}
           />
         </View>
 
         {/* Dark Mode */}
         <View style={styles.optionSwitch}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name="theme-light-dark" size={24} color="#0c1247" />
+            <Icon name="theme-light-dark" size={24} color="orange" />
             <Text style={styles.optionText}>Dark Mode</Text>
           </View>
           <Switch
             value={darkModeEnabled}
             onValueChange={setDarkModeEnabled}
-            thumbColor={darkModeEnabled ? '#0c1247' : '#ccc'}
+            thumbColor={darkModeEnabled ? 'orange' : '#fff'}
           />
         </View>
 
         {/* Change Password */}
-        <TouchableOpacity style={styles.option}>
-          <Icon name="lock-reset" size={24} color="#0c1247" />
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Changepassword")}>
+          <Icon name="lock-reset" size={24} color="orange" />
           <Text style={styles.optionText}>Change Password</Text>
         </TouchableOpacity>
 
         {/* Salary Details */}
         <TouchableOpacity style={styles.option}>
-          <Icon name="cash" size={24} color="#0c1247" />
+          <Icon name="cash" size={24} color="orange" />
           <Text style={styles.optionText}>Salary Details</Text>
         </TouchableOpacity>
 
         {/* Leave Settings */}
-        <TouchableOpacity style={styles.option}>
-          <Icon name="calendar-check" size={24} color="#0c1247" />
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Leaverequest")}>
+          <Icon name="calendar-check" size={24} color="orange" />
           <Text style={styles.optionText}>Leave Management</Text>
         </TouchableOpacity>
 
         {/* Help & Support */}
-        <TouchableOpacity style={styles.option}>
-          <Icon name="headset" size={24} color="#0c1247" />
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Support")}>
+          <Icon name="headset" size={24} color="orange" />
           <Text style={styles.optionText}>Help & Support</Text>
         </TouchableOpacity>
 
@@ -96,7 +96,7 @@ export default function EmployeeSettings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#0c1247',
   },
   header: {
     backgroundColor: '#0c1247',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    color: '#0c1247',
+    color: '#fff',
     marginLeft: 10,
   },
 });

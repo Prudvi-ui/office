@@ -34,6 +34,9 @@ import Notices from './Asserts/Screens/Notices'
 import Support from './Asserts/Screens/Support'
 import Performance from './Asserts/Screens/Performance'
 import Settings from './Asserts/Screens/Settings'
+import Changepassword from './Asserts/Screens/Changepassword'
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -73,6 +76,8 @@ export default function App() {
         <Stack.Screen name="Support" component={Support} />
         <Stack.Screen name="Performance" component={Performance} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Changepassword" component={Changepassword} />
+
 
 
 
