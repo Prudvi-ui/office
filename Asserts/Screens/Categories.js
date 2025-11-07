@@ -8,7 +8,7 @@ import {
   TextInput,
   Platform,
   Modal,
-  BackHandler,
+  BackHandler,Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
@@ -22,6 +22,7 @@ const defaultData = [
   { id: '5', title: 'App Development', nav: 'AppDevelopment', isRemovable: false },
   { id: '6', title: 'Web Development', nav: 'WebDevelopment', isRemovable: false },
   { id: '7', title: 'Employee', nav: 'Employees', isRemovable: false },
+  { id: '8', title: 'Domain', nav: 'Domain', isRemovable: false }, // ✅ Added new card
 ];
 
 const iconMap = {
@@ -32,7 +33,8 @@ const iconMap = {
   'App Development': 'cellphone',
   'Web Development': 'laptop',
   Employee: 'account-tie',
-};
+  Domain: 'domain', // ✅ Added Domain icon
+}
 
 export default function Categories({ navigation, route }) {
   const { role } = route.params || {};
@@ -62,9 +64,7 @@ export default function Categories({ navigation, route }) {
     setCards(cards.filter((card) => card.id !== id));
   };
 
-  const visibleCards = isAdmin
-    ? cards
-    : cards.filter((card) => card.title.toLowerCase() === 'employee');
+  const visibleCards = cards;
 
   const renderItem = ({ item }) => {
     const isSelected = selectedId === item.id;
@@ -162,7 +162,23 @@ export default function Categories({ navigation, route }) {
       return () => backHandler.remove();
     }, [navigation])
   );
-
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout Confirmation",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => navigation.replace("Login"), // ✅ replace instead of navigate to prevent going back
+        },
+      ]
+    );
+  };
   return (
     <View style={{ flex: 1, backgroundColor: '#0c1247' }}>
       {/* Header */}
@@ -179,13 +195,24 @@ export default function Categories({ navigation, route }) {
         <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginTop: 20 }}>
           Dashboard
         </Text>
-        <Icon
-          onPress={() => navigation.navigate('Notification')}
-          name="bell"
-          size={30}
-          color="white"
-          style={{ marginTop: 20 }}
-        />
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <TouchableOpacity onPress={handleLogout}>
+            <Icon
+              name="power-standby"
+              size={30}
+              color="white"
+              style={{ marginTop: 20 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+            <Icon
+              name="bell"
+              size={30}
+              color="white"
+              style={{ marginTop: 20 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Grid */}

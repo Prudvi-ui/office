@@ -25,8 +25,6 @@ export default function ClientsList({ navigation }) {
     return unsubscribe;
   }, [navigation]);
 
-
-
   const loadClients = async () => {
     try {
       const role = await AsyncStorage.getItem('userRole');
@@ -39,12 +37,36 @@ export default function ClientsList({ navigation }) {
       if (data) {
         const allClients = JSON.parse(data);
         const filtered =
-          role === 'admin'
+          role === 'Admin'
             ? allClients
             : allClients.filter(client => client.createdBy === ClientName);
 
         setClients(filtered);
-        setFilteredClients(filtered); // set initial display list
+        setFilteredClients(filtered);
+      } else {
+        const defaultClients = [
+          {
+            'Client Id': '1',
+            'Client Name': 'ABC Traders',
+            'Contact No': '9876543210',
+            createdBy: 'Admin',
+          },
+          {
+            'Client Id': '2',
+            'Client Name': 'Green Mart',
+            'Contact No': '9123456780',
+            createdBy: 'Admin',
+          },
+          {
+            'Client Id': '3',
+            'Client Name': 'Blue Sky Enterprises',
+            'Contact No': '9988776655',
+            createdBy: 'Admin',
+          },
+        ];
+        await AsyncStorage.setItem('Clients', JSON.stringify(defaultClients));
+        setClients(defaultClients);
+        setFilteredClients(defaultClients);
       }
     } catch (error) {
       console.error('Error loading clients:', error);
@@ -52,12 +74,9 @@ export default function ClientsList({ navigation }) {
   };
 
   const handleUpdateClientField = (clientId, field, value) => {
-    const updatedClients = clients.map((client) => {
-      if (client['Client Id'] === clientId) {
-        return { ...client, [field]: value };
-      }
-      return client;
-    });
+    const updatedClients = clients.map(client =>
+      client['Client Id'] === clientId ? { ...client, [field]: value } : client
+    );
     setClients(updatedClients);
   };
 
@@ -72,6 +91,7 @@ export default function ClientsList({ navigation }) {
             const updated = clients.filter(client => client['Client Id'] !== clientId);
             await AsyncStorage.setItem('Clients', JSON.stringify(updated));
             setClients(updated);
+            setFilteredClients(updated);
           } catch (error) {
             console.error('Delete error:', error);
           }
@@ -84,45 +104,42 @@ export default function ClientsList({ navigation }) {
     <Card style={styles.card}>
       <View style={{ flex: 1 }}>
         <Text style={styles.label}>Client Name</Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            value={item['Client Name']}
-            placeholder="Enter client name"
-            style={styles.input}
-            editable={userRole === 'admin'}
-            onChangeText={(text) =>
-              handleUpdateClientField(item['Client Id'], 'Client Name', text)
-            }
-          />
-          {userRole === 'admin' && (
-            <TouchableOpacity 
-              onPress={() => navigation.navigate('SingleClient', { client: item })}
-            >
-              <Icon name="pencil" size={24} color="#0C1247" />
-            </TouchableOpacity>
-          )}
-        </View>
+        <TextInput
+          value={item['Client Name']}
+          style={styles.input}
+          editable={false}
+        />
 
         <Text style={styles.label}>Contact No</Text>
-        <View style={styles.inputRow}>
-          <TextInput
-            value={item['Contact No']}
-            placeholder="Enter contact number"
-            style={styles.input}
-            editable={userRole === 'admin'}
-            onChangeText={(text) =>
-              handleUpdateClientField(item['Client Id'], 'Contact No', text)
-            }
-          />
-          {userRole === 'admin' && (
-            <TouchableOpacity onPress={() => deleteClient(item['Client Id'])}>
-              <Icon name="delete" size={24} color="red" />
+        <TextInput
+          value={item['Contact No']}
+          style={styles.input}
+          editable={false}
+        />
+
+        {userRole === 'Admin' && (
+          <View style={styles.actionRow}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigation.navigate('SingleClient', { client: item })}
+            >
+              <Icon name="pencil" size={22} color="#fff" />
+              <Text style={styles.editText}>Edit</Text>
             </TouchableOpacity>
-          )}
-        </View>
+
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => deleteClient(item['Client Id'])}
+            >
+              <Icon name="delete" size={22} color="#fff" />
+              <Text style={styles.deleteText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </Card>
   );
+
   useEffect(() => {
     if (!searchText.trim()) {
       setFilteredClients(clients);
@@ -135,16 +152,18 @@ export default function ClientsList({ navigation }) {
     }
   }, [searchText, clients]);
 
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{marginBottom:20}}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginBottom: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Clients List</Text>
-        {userRole === 'admin' && (
-          <TouchableOpacity onPress={() => navigation.navigate('SingleClient')} style={{marginBottom:20}}>
+        {userRole === 'Admin' && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('SingleClient')}
+            style={{ marginBottom: 20 }}
+          >
             <Icon name="plus-circle" size={30} color="#FF5C00" />
           </TouchableOpacity>
         )}
@@ -182,13 +201,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#001F54',
-    marginBottom:10
+    marginBottom: 10,
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom:20
+    marginBottom: 20,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -223,12 +242,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 4,
   },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 8,
-  },
   input: {
     backgroundColor: '#f9f9f9',
     borderRadius: 6,
@@ -237,5 +250,37 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: '#ccc',
     borderWidth: 1,
+    marginBottom: 8,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0C1247',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  editText: {
+    color: '#fff',
+    fontWeight: '600',
+    marginLeft: 5,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E74C3C',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  deleteText: {
+    color: '#fff',
+    fontWeight: '600',
+    marginLeft: 5,
   },
 });

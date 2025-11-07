@@ -10,13 +10,13 @@ import {
   Pressable,
   Platform,
   Image,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const initialFields = [
   { id: 1, label: 'Client Name' },
@@ -40,6 +40,20 @@ export default function ClientProfileScreen() {
   const [dates, setDates] = useState({ start: null, end: null });
   const [notifications, setNotifications] = useState([]);
 
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type,
+      text1,
+      text2,
+      position: 'top',
+      visibilityTime: 2500,
+    });
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const calculateRemainingDays = (start, end) => {
     if (!start || !end) return '';
     let count = 0;
@@ -52,19 +66,16 @@ export default function ClientProfileScreen() {
     return count;
   };
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
   const addField = () => {
-    if (newFieldName.trim() === '') return;
+    if (newFieldName.trim() === '') {
+      showToast('error', 'Missing Field', 'Please enter a valid field name.');
+      return;
+    }
     const nextId = fields.length > 0 ? Math.max(...fields.map(f => f.id)) + 1 : 1;
     setFields((prev) => [...prev, { id: nextId, label: newFieldName.trim() }]);
     setNewFieldName('');
     setShowModal(false);
+    showToast('success', 'Field Added', `${newFieldName} added successfully.`);
   };
 
   const showDatePicker = (field) => {
@@ -86,37 +97,21 @@ export default function ClientProfileScreen() {
   };
 
   const selectProfileImage = () => {
-    Alert.alert('Upload Profile Picture', 'Choose an option', [
-      {
-        text: 'Camera',
-        onPress: () => {
-          launchCamera({ mediaType: 'photo', cameraType: 'front', saveToPhotos: true, quality: 0.7 }, (response) => {
-            if (response.assets && response.assets.length > 0) {
-              setProfileImage(response.assets[0].uri);
-            }
-          });
-        },
-      },
-      {
-        text: 'Gallery',
-        onPress: () => {
-          launchImageLibrary({ mediaType: 'photo', quality: 0.7 }, (response) => {
-            if (response.assets && response.assets.length > 0) {
-              setProfileImage(response.assets[0].uri);
-            }
-          });
-        },
-      },
-      { text: 'Cancel', style: 'cancel' },
-    ]);
+    launchImageLibrary({ mediaType: 'photo', quality: 0.7 }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        setProfileImage(response.assets[0].uri);
+        showToast('success', 'Profile Updated', 'Profile picture selected.');
+      }
+    });
   };
 
   const saveProfile = async () => {
     const emptyFields = fields.filter((f) => !formData[f.label]);
     if (emptyFields.length) {
-      Alert.alert('Missing Fields', `Please fill in:\n${emptyFields.map(f => f.label).join(', ')}`);
+      showToast('error', 'Missing Fields', `Please fill: ${emptyFields.map(f => f.label).join(', ')}`);
       return;
     }
+
     try {
       const existingData = await AsyncStorage.getItem('Clients');
       let clients = existingData ? JSON.parse(existingData) : [];
@@ -129,18 +124,15 @@ export default function ClientProfileScreen() {
       };
 
       const index = clients.findIndex(c => c['Client Id'] === updatedForm['Client Id']);
-      if (index > -1) {
-        clients[index] = updatedForm;
-      } else {
-        clients.push(updatedForm);
-      }
+      if (index > -1) clients[index] = updatedForm;
+      else clients.push(updatedForm);
 
       await AsyncStorage.setItem('Clients', JSON.stringify(clients));
-      Alert.alert('Success', 'Client profile saved!');
+      showToast('success', 'Success', 'Client profile saved successfully.');
       navigation.goBack();
     } catch (error) {
       console.error('Saving error:', error);
-      Alert.alert('Error', 'Failed to save client data.');
+      showToast('error', 'Error', 'Failed to save client data.');
     }
   };
 
@@ -179,6 +171,7 @@ export default function ClientProfileScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      {/* Header */}
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center' }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={26} color="#001F54" />
@@ -189,6 +182,7 @@ export default function ClientProfileScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Notifications */}
       {notifications.length > 0 && (
         <View style={{ backgroundColor: '#ffeaea', margin: 10, padding: 10, borderRadius: 8 }}>
           <Text style={{ fontWeight: 'bold', color: 'red', marginBottom: 6 }}>Notifications</Text>
@@ -200,6 +194,7 @@ export default function ClientProfileScreen() {
         </View>
       )}
 
+      {/* Profile Image */}
       <View style={{ alignItems: 'center', marginTop: 10 }}>
         <TouchableOpacity onPress={selectProfileImage}>
           <Image
@@ -210,15 +205,18 @@ export default function ClientProfileScreen() {
         <Text style={{ marginTop: 8, fontSize: 16, color: '#0C1247', fontWeight: 'bold' }}>{PN}</Text>
       </View>
 
+      {/* TextInputs */}
       <ScrollView style={{ paddingHorizontal: 16 }}>
         <View style={{ marginBottom: 24, padding: 16 }}>
           {fields.map((item) => (
             <View key={item.id} style={{ marginBottom: 16 }}>
               <Text style={{ marginBottom: 6, fontWeight: 'bold', color: '#0c1247', fontSize: 14 }}>{item.label}</Text>
+
               {item.label === 'Start Date' || item.label === 'End Date' ? (
                 <TouchableOpacity
                   onPress={() => showDatePicker(item.label)}
-                  style={{ borderBottomWidth: 1, borderColor: '#889783', paddingVertical: 10 }}>
+                  style={{ borderBottomWidth: 1, borderColor: '#889783', paddingVertical: 10 }}
+                >
                   <Text style={{ color: formData[item.label] ? '#000' : '#aaa' }}>
                     {formData[item.label] || `Select ${item.label}`}
                   </Text>
@@ -233,7 +231,7 @@ export default function ClientProfileScreen() {
                     fontWeight: item.label === 'Remaining Days' && parseInt(formData[item.label]) <= 15 ? 'bold' : 'normal',
                   }}
                   onChangeText={(text) => handleInputChange(item.label, text)}
-                  value={formData?.[item.label] || ''}
+                  value={formData[item.label] || ''}
                   placeholder={`Enter ${item.label}`}
                   editable={item.label !== 'Remaining Days'}
                 />
@@ -243,14 +241,36 @@ export default function ClientProfileScreen() {
         </View>
       </ScrollView>
 
-      <TouchableOpacity onPress={() => setShowModal(true)} style={{ position: 'absolute', bottom: 30, right: 30, backgroundColor: '#0c1247', padding: 16, borderRadius: 100 }}>
+      {/* Floating Buttons */}
+      <TouchableOpacity
+        onPress={() => setShowModal(true)}
+        style={{
+          position: 'absolute',
+          bottom: 30,
+          right: 30,
+          backgroundColor: '#0c1247',
+          padding: 16,
+          borderRadius: 100,
+        }}
+      >
         <Icon name="plus" color="white" size={28} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={saveProfile} style={{ position: 'absolute', bottom: 100, right: 30, backgroundColor: '#FF5C00', padding: 16, borderRadius: 100 }}>
+      <TouchableOpacity
+        onPress={saveProfile}
+        style={{
+          position: 'absolute',
+          bottom: 100,
+          right: 30,
+          backgroundColor: '#FF5C00',
+          padding: 16,
+          borderRadius: 100,
+        }}
+      >
         <Icon name="content-save" color="white" size={28} />
       </TouchableOpacity>
 
+      {/* Add Field Modal */}
       <Modal transparent visible={showModal} animationType="slide">
         <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.3)', padding: 20 }}>
           <View style={{ backgroundColor: 'white', borderRadius: 10, padding: 20 }}>
@@ -273,6 +293,7 @@ export default function ClientProfileScreen() {
         </View>
       </Modal>
 
+      {/* Date Picker */}
       {showPicker.visible && (
         <DateTimePicker
           value={new Date()}

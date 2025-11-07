@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   dateText: { marginLeft: 10, color: '#333' },
   saveButton: {
-    backgroundColor: '#fff',
+    backgroundColor: 'orange',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',

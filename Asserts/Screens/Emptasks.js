@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   updateButton: {
-    backgroundColor: '#001F54',
+    backgroundColor: 'orange',
     paddingVertical: 8,
     borderRadius: 8,
     marginTop: 10,

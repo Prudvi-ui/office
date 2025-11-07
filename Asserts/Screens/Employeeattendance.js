@@ -293,12 +293,8 @@ export default function AttendanceScreen({ navigation }) {
             <Icon name="arrow-left" size={26} color="#fff" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Attendance</Text>
-          <TouchableOpacity>
-            <Image
-              source={{ uri: "https://randomuser.me/api/portraits/women/44.jpg" }}
-              style={styles.profileImage}
-            />
-          </TouchableOpacity>
+          <Text style={styles.headerTitle}></Text>
+
         </View>
 
         {/* Top Section */}
@@ -384,8 +380,8 @@ export default function AttendanceScreen({ navigation }) {
             {checkedIn
               ? formatTime(elapsedTime)
               : checkInTime && checkOutTime
-              ? "Work Complete"
-              : "00:00:00"}
+                ? "Work Complete"
+                : "00:00:00"}
           </Text>
 
           {/* Bottom stats */}
@@ -427,6 +423,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 12,
     backgroundColor: "#001F54",
+    marginTop:25
   },
   headerTitle: { color: "white", fontSize: 18, fontWeight: "600", marginTop: 20 },
   profileImage: { width: 36, height: 36, borderRadius: 18 },
@@ -497,7 +494,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 20,
-    gap:30
+    gap: 30
   },
   bottomItem: { alignItems: "center" },
   bottomTime: { fontSize: 16, fontWeight: "600", color: "#000", marginTop: 5 },

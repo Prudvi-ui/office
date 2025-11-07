@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 4,
   },
-  cancelBtn: { backgroundColor: 'white' },
+  cancelBtn: { backgroundColor: 'orange' },
   updateBtn: { backgroundColor: 'white' },
   cancelText: { color: 'black', fontWeight: '600' },
   updateText: { color: 'black', fontWeight: '600' },

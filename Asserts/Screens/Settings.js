@@ -7,12 +7,32 @@ import {
   Switch,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function EmployeeSettings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+
+  // 🔒 Logout confirmation
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout Confirmation",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => navigation.replace("Login"), // ✅ replace instead of navigate to prevent going back
+        },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,7 +85,7 @@ export default function EmployeeSettings({ navigation }) {
         </TouchableOpacity>
 
         {/* Salary Details */}
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Salarydetails")}>
           <Icon name="cash" size={24} color="orange" />
           <Text style={styles.optionText}>Salary Details</Text>
         </TouchableOpacity>
@@ -83,7 +103,7 @@ export default function EmployeeSettings({ navigation }) {
         </TouchableOpacity>
 
         {/* Logout */}
-        <TouchableOpacity style={[styles.option, { borderBottomWidth: 0 }]}>
+        <TouchableOpacity style={[styles.option, { borderBottomWidth: 0 }]} onPress={handleLogout}>
           <Icon name="logout" size={24} color="red" />
           <Text style={[styles.optionText, { color: 'red' }]}>Logout</Text>
         </TouchableOpacity>
@@ -104,14 +124,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
-    
   },
   headerTitle: {
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginTop:20
+    marginTop: 20,
   },
   scrollContainer: {
     padding: 16,
