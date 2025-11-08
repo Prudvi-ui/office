@@ -39,6 +39,21 @@ import Settings from './Asserts/Screens/Settings'
 import Changepassword from './Asserts/Screens/Changepassword'
 import Salarydetails from './Asserts/Screens/Salarydetails'
 import signup from './Asserts/Screens/Signup'
+// wordpress
+import wordpress from './Asserts/Screens/wordpress'
+import Monthlypayments from './Asserts/Screens/Monthlypayments'
+import Googlemybusinesses from './Asserts/Screens/Googlemybusinesses'
+import Whatsupbulksms from './Asserts/Screens/Whatsupbulksms'
+import OnPageoffPage from './Asserts/Screens/OnPageoffPage'
+import Metaads from './Asserts/Screens/Metaads'
+import Googleads from './Asserts/Screens/Googleads'
+// Domain
+import Domain from './Asserts/Screens/Domain'
+import Domaindetails from './Asserts/Screens/Domaindetails'
+import Hostingdetails from './Asserts/Screens/Hostingdetails'
+import Ssldetails from './Asserts/Screens/Ssldetails'
+
+
 const Stack = createStackNavigator();
 const toastConfig = {
   success: (props) => (
@@ -118,6 +133,19 @@ export default function App() {
           <Stack.Screen name="Changepassword" component={Changepassword} />
           <Stack.Screen name="Salarydetails" component={Salarydetails} />
           <Stack.Screen name="signup" component={signup} />
+          {/* wordpress */}
+          <Stack.Screen name="wordpress" component={wordpress} />
+          <Stack.Screen name="Monthlypayments" component={Monthlypayments} />
+          <Stack.Screen name="Googlemybusinesses" component={Googlemybusinesses} />
+          <Stack.Screen name="Whatsupbulksms" component={Whatsupbulksms} />
+          <Stack.Screen name="OnPageoffPage" component={OnPageoffPage} />
+          <Stack.Screen name="Googleads" component={Googleads} />
+          <Stack.Screen name="Metaads" component={Metaads} />
+          {/* Domain */}
+          <Stack.Screen name="Domain" component={Domain} />
+          <Stack.Screen name="Domaindetails" component={Domaindetails} />
+          <Stack.Screen name="Hostingdetails" component={Hostingdetails} />
+          <Stack.Screen name="Ssldetails" component={Ssldetails} />
 
 
 

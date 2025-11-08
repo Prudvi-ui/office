@@ -8,7 +8,8 @@ import {
   TextInput,
   Platform,
   Modal,
-  BackHandler,Alert
+  BackHandler,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
@@ -17,36 +18,40 @@ import { useFocusEffect } from '@react-navigation/native';
 const defaultData = [
   { id: '1', title: 'Marketing', nav: 'MarketingList', isRemovable: false },
   { id: '2', title: 'Clients', nav: 'Clients', isRemovable: false },
-  { id: '3', title: 'Digital Marketing', nav: 'DigitalMaketing', isRemovable: false },
+  { id: '3', title: 'WordPress', nav: 'wordpress', isRemovable: false },
   { id: '4', title: 'App & Web Development', nav: 'AppAndWeb', isRemovable: false },
   { id: '5', title: 'App Development', nav: 'AppDevelopment', isRemovable: false },
   { id: '6', title: 'Web Development', nav: 'WebDevelopment', isRemovable: false },
   { id: '7', title: 'Employee', nav: 'Employees', isRemovable: false },
-  { id: '8', title: 'Domain', nav: 'Domain', isRemovable: false }, // ✅ Added new card
+  { id: '8', title: 'Domain', nav: 'Domain', isRemovable: false },
 ];
 
 const iconMap = {
   Marketing: 'bullhorn',
   Clients: 'account-group',
-  'Digital Marketing': 'chart-line',
+  WordPress: 'wordpress',
   'App & Web Development': 'web',
   'App Development': 'cellphone',
   'Web Development': 'laptop',
   Employee: 'account-tie',
-  Domain: 'domain', // ✅ Added Domain icon
-}
+  Domain: 'domain',
+};
 
 export default function Categories({ navigation, route }) {
-  const { role } = route.params || {};
-  const isAdmin = role === 'admin';
+  // ✅ Ensure route.params always exists
+  const params = route?.params || {};
+  const isAdmin = params.role === 'admin';
 
   const [cards, setCards] = useState(defaultData);
-  const [selectedId, setSelectedId] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
 
+  // ✅ Add new card
   const addNewCard = () => {
-    if (!newCardTitle.trim()) return;
+    if (!newCardTitle.trim()) {
+      Alert.alert('Validation', 'Please enter a card title.');
+      return;
+    }
 
     const newCard = {
       id: Date.now().toString(),
@@ -55,27 +60,52 @@ export default function Categories({ navigation, route }) {
       isRemovable: true,
     };
 
-    setCards([...cards, newCard]);
+    setCards((prev) => [...prev, newCard]);
     setNewCardTitle('');
     setModalVisible(false);
   };
 
+  // ✅ Remove card
   const removeCard = (id) => {
-    setCards(cards.filter((card) => card.id !== id));
+    setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
-  const visibleCards = cards;
+  // ✅ BackHandler (always runs)
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (navigation.isFocused()) {
+          BackHandler.exitApp();
+          return true;
+        } else {
+          navigation.goBack();
+          return true;
+        }
+      };
 
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => backHandler.remove();
+    }, [navigation])
+  );
+
+  // ✅ Logout
+  const handleLogout = () => {
+    Alert.alert('Logout Confirmation', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: () => navigation.replace('Login'),
+      },
+    ]);
+  };
+
+  // ✅ Card renderer
   const renderItem = ({ item }) => {
-    const isSelected = selectedId === item.id;
     const iconName = iconMap[item.title] || 'folder';
-
     return (
       <TouchableOpacity
-        onPress={() => {
-          setSelectedId(item.id);
-          navigation.navigate(item.nav);
-        }}
+        onPress={() => navigation.navigate(item.nav)}
         style={{ width: '48%', marginBottom: 15 }}
       >
         <Card
@@ -84,10 +114,10 @@ export default function Categories({ navigation, route }) {
             borderRadius: 10,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: isSelected ? '#0c1247' : 'white',
+            backgroundColor: 'white',
             padding: 10,
             borderWidth: 2,
-            borderColor: isSelected ? 'white' : '#0c1247',
+            borderColor: '#0c1247',
             ...Platform.select({
               ios: {
                 shadowColor: '#0c1247',
@@ -102,19 +132,14 @@ export default function Categories({ navigation, route }) {
           }}
         >
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Icon
-              name={iconName}
-              size={30}
-              color={isSelected ? 'white' : '#0c1247'}
-              style={{ marginBottom: 10 }}
-            />
+            <Icon name={iconName} size={30} color="#0c1247" style={{ marginBottom: 10 }} />
           </View>
 
           <Text
             style={{
               fontSize: 15,
               textAlign: 'center',
-              color: isSelected ? 'white' : '#0c1247',
+              color: '#0c1247',
               fontWeight: 'bold',
             }}
           >
@@ -139,46 +164,6 @@ export default function Categories({ navigation, route }) {
     );
   };
 
-  // ✅ Fixed Back Button Logic
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        if (navigation.isFocused()) {
-          // Exit app only on this home screen
-          BackHandler.exitApp();
-          return true;
-        } else {
-          // Go back if on any other screen
-          navigation.goBack();
-          return true;
-        }
-      };
-
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
-
-      return () => backHandler.remove();
-    }, [navigation])
-  );
-  const handleLogout = () => {
-    Alert.alert(
-      "Logout Confirmation",
-      "Are you sure you want to logout?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Logout",
-          style: "destructive",
-          onPress: () => navigation.replace("Login"), // ✅ replace instead of navigate to prevent going back
-        },
-      ]
-    );
-  };
   return (
     <View style={{ flex: 1, backgroundColor: '#0c1247' }}>
       {/* Header */}
@@ -195,33 +180,25 @@ export default function Categories({ navigation, route }) {
         <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginTop: 20 }}>
           Dashboard
         </Text>
+
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity onPress={handleLogout}>
-            <Icon
-              name="power-standby"
-              size={30}
-              color="white"
-              style={{ marginTop: 20 }}
-            />
+            <Icon name="power-standby" size={30} color="white" style={{ marginTop: 20 }} />
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-            <Icon
-              name="bell"
-              size={30}
-              color="white"
-              style={{ marginTop: 20 }}
-            />
+            <Icon name="bell" size={30} color="white" style={{ marginTop: 20 }} />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Grid */}
+      {/* Cards */}
       <ScrollView>
         <View style={{ padding: 10 }}>
           <FlatList
-            data={visibleCards}
+            data={cards}
             renderItem={renderItem}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
+            keyExtractor={(item) => item.id}
             numColumns={2}
             scrollEnabled={false}
             columnWrapperStyle={{ gap: 10 }}
@@ -230,7 +207,7 @@ export default function Categories({ navigation, route }) {
         </View>
       </ScrollView>
 
-      {/* Modal for Adding Cards */}
+      {/* Add Card Modal */}
       <Modal
         visible={modalVisible}
         transparent
@@ -255,10 +232,16 @@ export default function Categories({ navigation, route }) {
             }}
           >
             <Text
-              style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0c1247' }}
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                marginBottom: 10,
+                color: '#0c1247',
+              }}
             >
               Add New Card
             </Text>
+
             <TextInput
               placeholder="Enter card title"
               value={newCardTitle}
@@ -271,7 +254,14 @@ export default function Categories({ navigation, route }) {
                 marginBottom: 15,
               }}
             />
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 10 }}>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                gap: 10,
+              }}
+            >
               <TouchableOpacity
                 onPress={() => setModalVisible(false)}
                 style={{
@@ -283,6 +273,7 @@ export default function Categories({ navigation, route }) {
               >
                 <Text style={{ color: '#333' }}>Cancel</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 onPress={addNewCard}
                 style={{
@@ -298,6 +289,24 @@ export default function Categories({ navigation, route }) {
           </View>
         </View>
       </Modal>
+
+      {/* Floating Add Button for Admin */}
+      {isAdmin && (
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={{
+            position: 'absolute',
+            bottom: 30,
+            right: 20,
+            backgroundColor: '#0c1247',
+            borderRadius: 30,
+            padding: 15,
+            elevation: 5,
+          }}
+        >
+          <Icon name="plus" size={25} color="white" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

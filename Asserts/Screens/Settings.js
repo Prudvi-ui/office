@@ -66,7 +66,7 @@ export default function EmployeeSettings({ navigation }) {
         </View>
 
         {/* Dark Mode */}
-        <View style={styles.optionSwitch}>
+        {/* <View style={styles.optionSwitch}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name="theme-light-dark" size={24} color="orange" />
             <Text style={styles.optionText}>Dark Mode</Text>
@@ -76,7 +76,7 @@ export default function EmployeeSettings({ navigation }) {
             onValueChange={setDarkModeEnabled}
             thumbColor={darkModeEnabled ? 'orange' : '#fff'}
           />
-        </View>
+        </View> */}
 
         {/* Change Password */}
         <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("Changepassword")}>
