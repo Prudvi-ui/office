@@ -17,6 +17,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import { launchImageLibrary } from "react-native-image-picker";
+import Toast from "react-native-toast-message";
 
 const STORAGE_KEY = "@monthly_payments";
 
@@ -57,7 +58,11 @@ export default function MonthlyPayments() {
 
   const handleAddOrUpdatePayment = () => {
     if (!amount || !date || !clientName) {
-      Alert.alert("Please fill in Client Name, Amount, and Date");
+      Toast.show({
+        type: "error",
+        text1: "Missing Fields ⚠️",
+        text2: "Please fill in Client Name, Amount, and Date.",
+      });
       return;
     }
 
@@ -66,18 +71,24 @@ export default function MonthlyPayments() {
       const updated = payments.map((p) =>
         p.id === editId
           ? {
-              ...p,
-              clientName,
-              clientProfile:
-                clientProfile ||
-                "https://cdn-icons-png.flaticon.com/512/219/219986.png",
-              amount,
-              note,
-              date,
-            }
+            ...p,
+            clientName,
+            clientProfile:
+              clientProfile ||
+              "https://cdn-icons-png.flaticon.com/512/219/219986.png",
+            amount,
+            note,
+            date,
+          }
           : p
       );
       savePayments(updated);
+
+      Toast.show({
+        type: "success",
+        text1: "Payment Updated ✅",
+        text2: "Payment details have been updated successfully.",
+      });
     } else {
       // ➕ Add new payment
       const newPayment = {
@@ -91,9 +102,15 @@ export default function MonthlyPayments() {
         date,
       };
       savePayments([...payments, newPayment]);
+
+      Toast.show({
+        type: "success",
+        text1: "Payment Added 💰",
+        text2: "New payment has been added successfully.",
+      });
     }
 
-    // Reset
+    // Reset form
     resetForm();
   };
 

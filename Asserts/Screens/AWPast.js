@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from "react-native-toast-message";
 
 export default function App({ navigation }) {
   const [formData, setFormData] = useState({ Status: 'Ongoing' });
@@ -92,27 +93,54 @@ export default function App({ navigation }) {
   }, []);
 
   // Save Project
-  const handleSave = async () => {
-    try {
-      const projectName = formData['Project Name']?.trim();
-      if (!projectName) {
-        Alert.alert('Error', 'Project Name is required');
-        return;
-      }
-      const newProject = {
-        id: Date.now().toString(),
-        name: projectName,
-        data: formData,
-      };
-      const existing = await AsyncStorage.getItem('ProjectsData');
-      const existingList = existing ? JSON.parse(existing) : [];
-      const updatedList = [...existingList, newProject];
-      await AsyncStorage.setItem('ProjectsData', JSON.stringify(updatedList));
-      Alert.alert('Success', 'Project saved successfully!');
-    } catch (error) {
-      console.log('Error saving project:', error);
+
+const handleSave = async () => {
+  try {
+    const projectName = formData['Project Name']?.trim();
+
+    if (!projectName) {
+      // ❌ Error Toast for empty project name
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Project Name is required ⚠️',
+        position: 'bottom',
+      });
+      return;
     }
-  };
+
+    const newProject = {
+      id: Date.now().toString(),
+      name: projectName,
+      data: formData,
+    };
+
+    const existing = await AsyncStorage.getItem('ProjectsData');
+    const existingList = existing ? JSON.parse(existing) : [];
+
+    const updatedList = [...existingList, newProject];
+    await AsyncStorage.setItem('ProjectsData', JSON.stringify(updatedList));
+
+    // ✅ Success Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Success',
+      text2: 'Project saved successfully! 🎉',
+      position: 'bottom',
+    });
+  } catch (error) {
+    console.log('Error saving project:', error);
+
+    // ❌ Error Toast for exception
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Something went wrong while saving the project ❌',
+      position: 'bottom',
+    });
+  }
+};
+
 
   // Common input box style
   const inputBox = {

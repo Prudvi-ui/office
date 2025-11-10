@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
-
+import Toast from "react-native-toast-message";
 const STORAGE_KEY = "@hosting_list";
 
 export default function Hostingdetails() {
@@ -75,7 +75,11 @@ export default function Hostingdetails() {
 
   const handleAddOrUpdate = () => {
     if (!hostingName || !plan || !status || !expiration) {
-      Alert.alert("Please fill in all fields");
+      Toast.show({
+        type: "error",
+        text1: "Missing Fields ⚠️",
+        text2: "Please fill in all fields before saving.",
+      });
       return;
     }
 
@@ -84,6 +88,11 @@ export default function Hostingdetails() {
         h.id === editId ? { ...h, hostingName, plan, status, expiration } : h
       );
       saveHostings(updated);
+      Toast.show({
+        type: "success",
+        text1: "Hosting Updated ✅",
+        text2: "Hosting details have been successfully updated.",
+      });
     } else {
       const newHosting = {
         id: Date.now().toString(),
@@ -93,11 +102,15 @@ export default function Hostingdetails() {
         expiration,
       };
       saveHostings([...hostings, newHosting]);
+      Toast.show({
+        type: "success",
+        text1: "Hosting Added 🎉",
+        text2: "New hosting has been added successfully.",
+      });
     }
 
     resetForm();
   };
-
   const handleEdit = (item) => {
     setHostingName(item.hostingName);
     setPlan(item.plan);

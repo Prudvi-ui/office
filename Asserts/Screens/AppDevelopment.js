@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from "react-native-toast-message";
 
 export default function App({ navigation }) {
   const defaultActiveFields = [
@@ -71,15 +72,29 @@ export default function App({ navigation }) {
   const isDefaultField = (index) =>
     viewType === 'Active' ? index < defaultActiveFields.length : index < defaultPastFields.length;
 
-  const Project = async (selectedProject) => {
-    try {
-      await AsyncStorage.setItem('ProjectName', selectedProject);
-      console.log('Success', 'Project Name stored successfully');
-    } catch (error) {
-      Alert.alert('Error', 'Project Name not stored');
-      console.error('Storage Error:', error);
-    }
-  };
+const Project = async (selectedProject) => {
+  try {
+    await AsyncStorage.setItem('ProjectName', selectedProject);
+
+    // ✅ Success Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Success',
+      text2: 'Project name stored successfully 🎉',
+      position: 'bottom',
+    });
+  } catch (error) {
+    console.error('Storage Error:', error);
+
+    // ❌ Error Toast
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Project name not stored ❌',
+      position: 'bottom',
+    });
+  }
+};
 
   useEffect(() => {
     if (selectedProject) {

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-
+import Toast from "react-native-toast-message";
 const HEADER_HEIGHT = 250;
 const screenHeight = Dimensions.get('window').height;
 
@@ -37,17 +37,34 @@ export default function App({ navigation }) {
 
   const handleAddFieldConfirm = () => {
     const trimmed = newPlaceholder.trim();
+
     if (!trimmed) {
-      Alert.alert('Please enter a valid placeholder name');
+      Toast.show({
+        type: "error",
+        text1: "Invalid Field ⚠️",
+        text2: "Please enter a valid placeholder name.",
+      });
       return;
     }
+
     if (inputFields.includes(trimmed)) {
-      Alert.alert('Field with this name already exists');
+      Toast.show({
+        type: "info",
+        text1: "Duplicate Field ℹ️",
+        text2: "A field with this name already exists.",
+      });
       return;
     }
+
     setInputFields([...inputFields, trimmed]);
-    setNewPlaceholder('');
+    setNewPlaceholder("");
     setIsAddingField(false);
+
+    Toast.show({
+      type: "success",
+      text1: "Field Added ✅",
+      text2: "New input field has been added successfully.",
+    });
   };
 
   const handleRemoveField = (fieldToRemove) => {
@@ -95,87 +112,87 @@ export default function App({ navigation }) {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {/* Header */}
         <View style={{ height: 250, padding: 20, justifyContent: 'space-between' }}>
-               {/* Top Right Icons */}
-               <View
-                 style={{
-                   alignSelf: 'flex-end',
-                   flexDirection: 'row',
-                   backgroundColor: '#0c1247',
-                   borderColor: 'white',
-                   borderWidth: 2,
-                   borderTopLeftRadius: 20,
-                   borderBottomLeftRadius: 20,
-                   paddingHorizontal: 10,
-                   paddingVertical: 5,
-                   elevation: 10,
-                   shadowColor: 'white',
-                   shadowOffset: { width: 0, height: 3 },
-                   shadowOpacity: 0.4,
-                   shadowRadius: 4,
-                   marginTop: 40,
-                 }}
-               >
-                 <TouchableOpacity onPress={() => setIsAddingField(true)}>
-                   <Icon
-                     name="plus"
-                     color="white"
-                     size={26}
-                     style={{
-                       marginRight: 10,
-                       borderWidth: 2,
-                       borderColor: 'white',
-                       borderRadius: 100,
-                       padding: 3,
-                     }}
-                   />
-                 </TouchableOpacity>
-                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                   <Icon
-                     name="bell"
-                     color="white"
-                     size={26}
-                     style={{
-                       borderWidth: 2,
-                       borderColor: 'white',
-                       borderRadius: 100,
-                       padding: 3,
-                     }}
-                   />
-                 </TouchableOpacity>
-               </View>
+          {/* Top Right Icons */}
+          <View
+            style={{
+              alignSelf: 'flex-end',
+              flexDirection: 'row',
+              backgroundColor: '#0c1247',
+              borderColor: 'white',
+              borderWidth: 2,
+              borderTopLeftRadius: 20,
+              borderBottomLeftRadius: 20,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              elevation: 10,
+              shadowColor: 'white',
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.4,
+              shadowRadius: 4,
+              marginTop: 40,
+            }}
+          >
+            <TouchableOpacity onPress={() => setIsAddingField(true)}>
+              <Icon
+                name="plus"
+                color="white"
+                size={26}
+                style={{
+                  marginRight: 10,
+                  borderWidth: 2,
+                  borderColor: 'white',
+                  borderRadius: 100,
+                  padding: 3,
+                }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+              <Icon
+                name="bell"
+                color="white"
+                size={26}
+                style={{
+                  borderWidth: 2,
+                  borderColor: 'white',
+                  borderRadius: 100,
+                  padding: 3,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
 
-         <View style={{ alignItems: 'center', marginTop: 10 }}>
-                 <TouchableOpacity onPress={selectProfileImage}>
-                   {profileImage ? (
-                     <Image
-                       source={{ uri: profileImage }}
-                       style={{
-                         width: 120,
-                         height: 120,
-                         borderRadius: 100,
-                         borderWidth: 2,
-                         borderColor: '#FF5C00',
-                       }}
-                     />
-                   ) : (
-                     <Image
-                       source={require('../Images/Profile1.png')}
-                       style={{
-                         width: 120,
-                         height: 120,
-                         borderRadius: 100,
-                         borderWidth: 2,
-                         borderColor: '#0C1247',
-                       }}
-                     />
-                   )}
-                 </TouchableOpacity>
+          <View style={{ alignItems: 'center', marginTop: 10 }}>
+            <TouchableOpacity onPress={selectProfileImage}>
+              {profileImage ? (
+                <Image
+                  source={{ uri: profileImage }}
+                  style={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 100,
+                    borderWidth: 2,
+                    borderColor: '#FF5C00',
+                  }}
+                />
+              ) : (
+                <Image
+                  source={require('../Images/Profile1.png')}
+                  style={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 100,
+                    borderWidth: 2,
+                    borderColor: '#0C1247',
+                  }}
+                />
+              )}
+            </TouchableOpacity>
             <Text style={{ marginTop: 8, fontSize: 16, color: 'white', fontWeight: 'bold' }}>
               Referred Name
             </Text>
           </View>
 
-         
+
         </View>
 
         {/* White Card */}

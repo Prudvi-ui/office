@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from "react-native-toast-message";
 
 export default function App({ navigation }) {
   const defaultActiveFields = [
@@ -73,10 +74,24 @@ export default function App({ navigation }) {
   const Project = async (selectedProject) => {
     try {
       await AsyncStorage.setItem('ProjectName', selectedProject);
-      console.log('Success', 'Project Name stored successfully');
+
+      // ✅ Success Toast
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Project Name stored successfully 🎉',
+        position: 'bottom',
+      });
     } catch (error) {
-      Alert.alert('Error', 'Project Name not stored');
       console.error('Storage Error:', error);
+
+      // ❌ Error Toast
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Project Name not stored ❌',
+        position: 'bottom',
+      });
     }
   };
 
@@ -103,7 +118,7 @@ export default function App({ navigation }) {
           alignItems: 'center',
           paddingHorizontal: 20,
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{marginTop:20}}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginTop: 20 }}>

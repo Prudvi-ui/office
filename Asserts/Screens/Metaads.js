@@ -17,6 +17,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import { launchImageLibrary } from "react-native-image-picker";
+import Toast from "react-native-toast-message";
 
 const STORAGE_KEY = "@clients_data";
 
@@ -84,7 +85,11 @@ export default function Metaads() {
 
   const handleAddOrUpdateClient = () => {
     if (!clientName || !amount || !date) {
-      Alert.alert("Please fill in Client Name, Amount, and Date");
+      Toast.show({
+        type: "error",
+        text1: "Missing Fields ⚠️",
+        text2: "Please fill in Client Name, Amount, and Date.",
+      });
       return;
     }
 
@@ -92,16 +97,23 @@ export default function Metaads() {
       const updated = clients.map((c) =>
         c.id === editId
           ? {
-              ...c,
-              clientName,
-              amount,
-              date,
-              clientProfile:
-                clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
-            }
+            ...c,
+            clientName,
+            amount,
+            date,
+            clientProfile:
+              clientProfile ||
+              "https://cdn-icons-png.flaticon.com/512/219/219986.png",
+          }
           : c
       );
       saveClients(updated);
+
+      Toast.show({
+        type: "success",
+        text1: "Client Updated ✅",
+        text2: "Client details have been updated successfully.",
+      });
     } else {
       const newClient = {
         id: Date.now().toString(),
@@ -112,6 +124,12 @@ export default function Metaads() {
           clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
       };
       saveClients([...clients, newClient]);
+
+      Toast.show({
+        type: "success",
+        text1: "Client Added ✅",
+        text2: "New client has been added successfully.",
+      });
     }
 
     resetForm();

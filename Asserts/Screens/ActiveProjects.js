@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Toast from "react-native-toast-message";
 const initialFields = [
   'Project Name',
   'Company Name',
@@ -116,32 +116,45 @@ export default function App({ navigation }) {
     }
   }, [dates]);
 
-  const handleProject = async () => {
-    try {
-      const projectName = formData['Project Name'] || '';
-      const status = formData['Status'] || 'Ongoing';
+ const handleProject = async () => {
+  try {
+    const projectName = formData['Project Name'] || '';
+    const status = formData['Status'] || 'Ongoing';
 
-      const newProject = {
-        id: Date.now().toString(),
-        name: projectName,
-        status: status,
-        createdAt: new Date().toISOString(),
-      };
+    const newProject = {
+      id: Date.now().toString(),
+      name: projectName,
+      status: status,
+      createdAt: new Date().toISOString(),
+    };
 
-      // Fetch existing
-      const existing = await AsyncStorage.getItem('ProjectsData');
-      const existingList = existing ? JSON.parse(existing) : [];
+    // Fetch existing
+    const existing = await AsyncStorage.getItem('ProjectsData');
+    const existingList = existing ? JSON.parse(existing) : [];
 
-      // Save new
-      const updatedList = [...existingList, newProject];
-      await AsyncStorage.setItem('ProjectsData', JSON.stringify(updatedList));
+    // Save new
+    const updatedList = [...existingList, newProject];
+    await AsyncStorage.setItem('ProjectsData', JSON.stringify(updatedList));
 
-      Alert.alert('Saved', 'Project saved successfully');
-      navigation.navigate('DigitalMaketing');
-    } catch (error) {
-      console.error('Error saving project:', error);
-    }
-  };
+    // ✅ Replace Alert with Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Project Saved',
+      text2: 'Project saved successfully 👏',
+      position: 'bottom',
+    });
+
+    navigation.navigate('DigitalMaketing');
+  } catch (error) {
+    console.error('Error saving project:', error);
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Failed to save project ❌',
+      position: 'bottom',
+    });
+  }
+};
   useEffect(() => {
     const fetchProjectName = async () => {
       try {

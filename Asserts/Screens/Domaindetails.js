@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const STORAGE_KEY = "@domains_list";
 
@@ -62,7 +63,13 @@ export default function Domaindetails() {
 
   const handleAddOrUpdate = () => {
     if (!domainName || !status || !expiration) {
-      Alert.alert("Please fill in all fields");
+      // ⚠️ Validation toast
+      Toast.show({
+        type: 'error',
+        text1: 'Missing Fields',
+        text2: 'Please fill in all fields.',
+        position: 'bottom',
+      });
       return;
     }
 
@@ -71,6 +78,14 @@ export default function Domaindetails() {
         d.id === editId ? { ...d, domainName, status, expiration } : d
       );
       saveDomains(updated);
+
+      // ✏️ Update success toast
+      Toast.show({
+        type: 'success',
+        text1: 'Domain Updated',
+        text2: 'Domain details updated successfully! ✅',
+        position: 'bottom',
+      });
     } else {
       const newDomain = {
         id: Date.now().toString(),
@@ -79,6 +94,14 @@ export default function Domaindetails() {
         expiration,
       };
       saveDomains([...domains, newDomain]);
+
+      // 🆕 Add success toast
+      Toast.show({
+        type: 'success',
+        text1: 'Domain Added',
+        text2: 'New domain added successfully! 🎉',
+        position: 'bottom',
+      });
     }
 
     resetForm();
@@ -92,19 +115,29 @@ export default function Domaindetails() {
     setFormVisible(true);
   };
 
-  const handleDelete = (id) => {
-    Alert.alert("Delete Domain", "Are you sure you want to delete this domain?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: async () => {
-          const filtered = domains.filter((d) => d.id !== id);
-          saveDomains(filtered);
-        },
-      },
-    ]);
-  };
+const handleDelete = (id) => {
+  // ⚠️ Confirmation-style toast
+  Toast.show({
+    type: 'info',
+    text1: 'Deleting Domain',
+    text2: 'Domain will be deleted in 2 seconds... ⏳',
+    position: 'bottom',
+  });
+
+  setTimeout(async () => {
+    const filtered = domains.filter((d) => d.id !== id);
+    saveDomains(filtered);
+
+    // ✅ Success toast
+    Toast.show({
+      type: 'success',
+      text1: 'Domain Deleted',
+      text2: 'Domain removed successfully 🗑️',
+      position: 'bottom',
+    });
+  }, 2000);
+};
+
 
   const resetForm = () => {
     setDomainName("");

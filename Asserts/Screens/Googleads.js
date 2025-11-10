@@ -17,6 +17,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import { launchImageLibrary } from "react-native-image-picker";
+import Toast from 'react-native-toast-message';
 
 const STORAGE_KEY = "@clients_data";
 
@@ -83,53 +84,84 @@ export default function Googleads() {
   };
 
   const handleAddOrUpdateClient = () => {
-    if (!clientName || !amount || !date) {
-      Alert.alert("Please fill in Client Name, Amount, and Date");
-      return;
-    }
+  if (!clientName || !amount || !date) {
+    // ⚠️ Validation Toast
+    Toast.show({
+      type: 'error',
+      text1: 'Missing Fields',
+      text2: 'Please fill in Client Name, Amount, and Date.',
+      position: 'bottom',
+    });
+    return;
+  }
 
-    if (editId) {
-      const updated = clients.map((c) =>
-        c.id === editId
-          ? {
-              ...c,
-              clientName,
-              amount,
-              date,
-              clientProfile:
-                clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
-            }
-          : c
-      );
-      saveClients(updated);
-    } else {
-      const newClient = {
-        id: Date.now().toString(),
-        clientName,
-        amount,
-        date,
-        clientProfile:
-          clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
-      };
-      saveClients([...clients, newClient]);
-    }
+  if (editId) {
+    const updated = clients.map((c) =>
+      c.id === editId
+        ? {
+            ...c,
+            clientName,
+            amount,
+            date,
+            clientProfile:
+              clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
+          }
+        : c
+    );
+    saveClients(updated);
 
-    resetForm();
-  };
+    // ✏️ Update Success Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Client Updated',
+      text2: 'Client details updated successfully! ✅',
+      position: 'bottom',
+    });
+  } else {
+    const newClient = {
+      id: Date.now().toString(),
+      clientName,
+      amount,
+      date,
+      clientProfile:
+        clientProfile || "https://cdn-icons-png.flaticon.com/512/219/219986.png",
+    };
+    saveClients([...clients, newClient]);
 
-  const handleDelete = (id) => {
-    Alert.alert("Delete Client", "Are you sure you want to remove this client?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: async () => {
-          const filtered = clients.filter((c) => c.id !== id);
-          saveClients(filtered);
-        },
-        style: "destructive",
-      },
-    ]);
-  };
+    // 🆕 Add Success Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Client Added',
+      text2: 'New client added successfully! 🎉',
+      position: 'bottom',
+    });
+  }
+
+  resetForm();
+};
+
+ const handleDelete = (id) => {
+  // ⚠️ Confirmation-like Toast
+  Toast.show({
+    type: 'info',
+    text1: 'Deleting Client',
+    text2: 'Client will be deleted in 2 seconds... ⏳',
+    position: 'bottom',
+  });
+
+  setTimeout(async () => {
+    const filtered = clients.filter((c) => c.id !== id);
+    saveClients(filtered);
+
+    // ✅ Success Toast
+    Toast.show({
+      type: 'success',
+      text1: 'Client Deleted',
+      text2: 'Client removed successfully 🗑️',
+      position: 'bottom',
+    });
+  }, 2000);
+};
 
   const handleEdit = (item) => {
     setClientName(item.clientName);

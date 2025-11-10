@@ -10,6 +10,7 @@ import {
     Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Toast from "react-native-toast-message";
 
 export default function ChangePasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
@@ -18,20 +19,39 @@ export default function ChangePasswordScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
 
-    const handleChangePassword = () => {
-        if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-            Alert.alert('Error', 'All fields are required.');
-            return;
-        }
-        if (password !== confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match.');
-            return;
-        }
+  const handleChangePassword = () => { 
+  if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+    // ⚠️ Required fields toast
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'All fields are required.',
+      position: 'bottom',
+    });
+    return;
+  }
 
-        // You can call your API here to change the password
-        Alert.alert('Success', 'Your password has been updated successfully.');
-    };
+  if (password !== confirmPassword) {
+    // ❌ Password mismatch toast
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Passwords do not match.',
+      position: 'bottom',
+    });
+    return;
+  }
 
+  // ✅ Success toast
+  Toast.show({
+    type: 'success',
+    text1: 'Success',
+    text2: 'Your password has been updated successfully. 🔒',
+    position: 'bottom',
+  });
+
+  // You can call your API here to change the password
+};
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor="#fff" barStyle="dark-content" />

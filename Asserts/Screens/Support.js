@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
+import Toast from "react-native-toast-message";
 
 export default function HelpSupportScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,15 +28,24 @@ export default function HelpSupportScreen({ navigation }) {
 
   const handleSubmit = () => {
     if (!issueType || !description) {
-      alert('Please fill in all fields.');
+      Toast.show({
+        type: "error",
+        text1: "Missing Fields ⚠️",
+        text2: "Please fill in all fields before submitting.",
+      });
       return;
     }
-    alert('Your query has been submitted successfully!');
+
+    Toast.show({
+      type: "success",
+      text1: "Query Submitted ✅",
+      text2: "Your issue has been submitted successfully!",
+    });
+
     setIssueType('');
     setDescription('');
     setModalVisible(false);
   };
-
   const renderFAQItem = ({ item }) => (
     <Card style={styles.card}>
       <TouchableOpacity>
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop:20
+    marginTop: 20
   },
   headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
   content: { padding: 15 },

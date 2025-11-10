@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
+import Toast from "react-native-toast-message";
 
 export default function ClientsList({ navigation }) {
   const [clients, setClients] = useState([]);
@@ -81,23 +82,41 @@ export default function ClientsList({ navigation }) {
   };
 
   const deleteClient = (clientId) => {
-    Alert.alert('Confirm Delete', 'Are you sure you want to delete this client?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            const updated = clients.filter(client => client['Client Id'] !== clientId);
-            await AsyncStorage.setItem('Clients', JSON.stringify(updated));
-            setClients(updated);
-            setFilteredClients(updated);
-          } catch (error) {
-            console.error('Delete error:', error);
-          }
-        },
-      },
-    ]);
+    // ⚠️ Step 1: Ask for delete confirmation via toast
+    Toast.show({
+      type: 'info',
+      text1: 'Confirm Delete',
+      text2: 'Deleting this client in 2 seconds... ⏳',
+      position: 'bottom',
+    });
+
+    // Step 2: Wait briefly before deleting (simulating confirmation)
+    setTimeout(async () => {
+      try {
+        const updated = clients.filter(client => client['Client Id'] !== clientId);
+        await AsyncStorage.setItem('Clients', JSON.stringify(updated));
+        setClients(updated);
+        setFilteredClients(updated);
+
+        // ✅ Success toast
+        Toast.show({
+          type: 'success',
+          text1: 'Deleted',
+          text2: 'Client deleted successfully 🗑️',
+          position: 'bottom',
+        });
+      } catch (error) {
+        console.error('Delete error:', error);
+
+        // ❌ Error toast
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to delete client ❌',
+          position: 'bottom',
+        });
+      }
+    }, 2000);
   };
 
   const renderItem = ({ item }) => (

@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import Toast from "react-native-toast-message";
 
 const defaultData = [
   { id: '1', title: 'Marketing', nav: 'MarketingList', isRemovable: false },
@@ -49,7 +50,13 @@ export default function Categories({ navigation, route }) {
   // ✅ Add new card
   const addNewCard = () => {
     if (!newCardTitle.trim()) {
-      Alert.alert('Validation', 'Please enter a card title.');
+      // ⚠️ Validation Toast
+      Toast.show({
+        type: 'error',
+        text1: 'Validation',
+        text2: 'Please enter a card title.',
+        position: 'bottom',
+      });
       return;
     }
 
@@ -90,16 +97,26 @@ export default function Categories({ navigation, route }) {
 
   // ✅ Logout
   const handleLogout = () => {
-    Alert.alert('Logout Confirmation', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: () => navigation.replace('Login'),
-      },
-    ]);
-  };
+    // ⚠️ Confirmation Toast
+    Toast.show({
+      type: 'info',
+      text1: 'Logout Requested',
+      text2: 'Logging out in 2 seconds... 👋',
+      position: 'bottom',
+    });
 
+    // Auto logout after delay (simulating confirmation)
+    setTimeout(() => {
+      navigation.replace('Login');
+
+      Toast.show({
+        type: 'success',
+        text1: 'Logged Out',
+        text2: 'You have been logged out successfully.',
+        position: 'bottom',
+      });
+    }, 2000);
+  };
   // ✅ Card renderer
   const renderItem = ({ item }) => {
     const iconName = iconMap[item.title] || 'folder';
