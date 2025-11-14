@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Alert,
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,81 +28,40 @@ export default function App({ navigation }) {
 
   const [activeFields, setActiveFields] = useState([...defaultActiveFields]);
   const [pastFields, setPastFields] = useState([...defaultPastFields]);
-  const [formData, setFormData] = useState({});
-  const [isAddingField, setIsAddingField] = useState(false);
-  const [newPlaceholder, setNewPlaceholder] = useState('');
   const [viewType, setViewType] = useState('Active');
   const [selectedProject, setSelectedProject] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [isSearchVisible, setIsSearchVisible] = useState(false); // 🔍 search bar toggle
 
-  const handleRemoveField = (fieldToRemove) => {
-    const updatedFormData = { ...formData };
-    delete updatedFormData[fieldToRemove];
+  // ✅ Load previously selected project from storage
+  useEffect(() => {
+    const loadProject = async () => {
+      const savedProject = await AsyncStorage.getItem('ProjectName');
+      if (savedProject) setSelectedProject(savedProject);
+    };
+    loadProject();
+  }, []);
 
-    if (viewType === 'Active') {
-      const updatedFields = activeFields.filter((field) => field !== fieldToRemove);
-      setActiveFields(updatedFields);
-    } else {
-      const updatedFields = pastFields.filter((field) => field !== fieldToRemove);
-      setPastFields(updatedFields);
-    }
-
-    setFormData(updatedFormData);
-
-    if (selectedProject === fieldToRemove) {
-      setSelectedProject('');
-    }
-  };
-
-  const handleAddFieldConfirm = () => {
-    if (!newPlaceholder.trim()) return;
-
-    if (viewType === 'Active') {
-      setActiveFields([...activeFields, newPlaceholder]);
-    } else {
-      setPastFields([...pastFields, newPlaceholder]);
-    }
-
-    setNewPlaceholder('');
-    setIsAddingField(false);
-  };
-
-  const isDefaultField = (index) =>
-    viewType === 'Active' ? index < defaultActiveFields.length : index < defaultPastFields.length;
-
-const Project = async (selectedProject) => {
-  try {
-    await AsyncStorage.setItem('ProjectName', selectedProject);
-
-    // ✅ Success Toast
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: 'Project name stored successfully 🎉',
-      position: 'bottom',
-    });
-  } catch (error) {
-    console.error('Storage Error:', error);
-
-    // ❌ Error Toast
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'Project name not stored ❌',
-      position: 'bottom',
-    });
-  }
-};
-
+  // ✅ Save selected project when it changes
   useEffect(() => {
     if (selectedProject) {
-      Project(selectedProject);
+      AsyncStorage.setItem('ProjectName', selectedProject);
     }
   }, [selectedProject]);
 
+  const handleRemoveField = (fieldToRemove) => {
+    const updatedFields =
+      viewType === 'Active'
+        ? activeFields.filter((field) => field !== fieldToRemove)
+        : pastFields.filter((field) => field !== fieldToRemove);
+
+    if (viewType === 'Active') setActiveFields(updatedFields);
+    else setPastFields(updatedFields);
+
+    if (selectedProject === fieldToRemove) setSelectedProject('');
+  };
+
   const currentFields = viewType === 'Active' ? activeFields : pastFields;
-  const filteredFields = currentFields.filter(field =>
+  const filteredFields = currentFields.filter((field) =>
     field.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -129,25 +87,16 @@ const Project = async (selectedProject) => {
           style={{
             flexDirection: 'row',
             backgroundColor: '#0c1247',
-            borderColor: 'white',
-            // borderWidth: 2,
-            // borderTopLeftRadius: 20,
-            // borderBottomLeftRadius: 20,
             paddingHorizontal: 10,
             paddingVertical: 5,
-            elevation: 10,
-            shadowColor: 'white',
-            shadowOffset: { width: 3, height: 3 },
-            shadowOpacity: 0.4,
-            shadowRadius: 4,
-            marginTop: 20
+            marginTop: 20,
           }}>
           <TouchableOpacity
             onPress={() => {
               const targetScreen = viewType === 'Active' ? 'AActive' : 'APast';
               navigation.navigate(targetScreen);
-            }}
-          >            <Icon
+            }}>
+            <Icon
               name="plus"
               color="white"
               size={26}
@@ -160,7 +109,8 @@ const Project = async (selectedProject) => {
               }}
             />
           </TouchableOpacity>
-          <Icon onPress={() => navigation.navigate('Notification')}
+          <Icon
+            onPress={() => navigation.navigate('Notification')}
             name="bell"
             color="white"
             size={26}
@@ -174,7 +124,7 @@ const Project = async (selectedProject) => {
         </View>
       </View>
 
-      {/* White Card Section */}
+      {/* Content */}
       <View
         style={{
           backgroundColor: 'white',
@@ -230,7 +180,7 @@ const Project = async (selectedProject) => {
           </TouchableOpacity>
         </View>
 
-        {/* 🔍 Search Bar */}
+        {/* Search Bar */}
         <View
           style={{
             width: '100%',
@@ -257,10 +207,9 @@ const Project = async (selectedProject) => {
           />
         </View>
 
-        {/* List of Fields */}
+        {/* List of Projects */}
         {filteredFields.map((placeholder, index) => {
           const isSelected = selectedProject === placeholder;
-          const isDefault = isDefaultField(currentFields.indexOf(placeholder));
 
           return (
             <TouchableOpacity
@@ -269,10 +218,9 @@ const Project = async (selectedProject) => {
               onPress={() => {
                 setSelectedProject(placeholder);
                 navigation.navigate(viewType === 'Active' ? 'AWActive' : 'AWPast');
-                setTimeout(() => setSelectedProject(''), 500);
               }}>
               <LinearGradient
-                colors={isSelected ? ['#FF5C00', 'white'] : ['white', 'white']}
+                colors={isSelected ? ['#E77D41', '#FFFFFF'] : ['#FFFFFF', '#FFFFFF']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -292,12 +240,12 @@ const Project = async (selectedProject) => {
                 <Icon
                   name="file-document"
                   size={22}
-                  color={isSelected ? 'white' : '#0c1247'}
+                  color={isSelected ? '#fff' : '#0c1247'}
                   style={{ marginRight: 10 }}
                 />
                 <Text
                   style={{
-                    color: isSelected ? 'white' : '#0c1247',
+                    color: isSelected ? '#fff' : '#0c1247',
                     fontSize: 16,
                     fontWeight: '500',
                     flex: 1,
@@ -307,18 +255,16 @@ const Project = async (selectedProject) => {
                 <Icon
                   name="chevron-right"
                   size={24}
-                  color={isSelected ? 'white' : '#0c1247'}
+                  color={isSelected ? '#fff' : '#0c1247'}
                 />
-                {!isDefault && (
-                  <TouchableOpacity onPress={() => handleRemoveField(placeholder)}>
-                    <Icon
-                      name="delete"
-                      size={22}
-                      color={isSelected ? 'white' : 'red'}
-                      style={{ marginLeft: 8 }}
-                    />
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity onPress={() => handleRemoveField(placeholder)}>
+                  <Icon
+                    name="delete"
+                    size={22}
+                    color={isSelected ? '#fff' : 'red'}
+                    style={{ marginLeft: 8 }}
+                  />
+                </TouchableOpacity>
               </LinearGradient>
             </TouchableOpacity>
           );

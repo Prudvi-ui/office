@@ -59,7 +59,7 @@ export default function HelpSupportScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={28} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Help & Support</Text>
@@ -140,7 +140,7 @@ export default function HelpSupportScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#001F54' },
+  container: { flex: 1, backgroundColor: '#fff' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop: 20
+    height: 80
   },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginTop: 20 },
   content: { padding: 15 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginVertical: 10, color: '#001F54' },
   card: {
@@ -159,6 +159,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     elevation: 2,
+    borderColor: 2,
+    borderColor: "#0c1247"
   },
   question: { fontWeight: 'bold', fontSize: 15, color: '#000' },
   answer: { fontSize: 14, color: '#333', marginTop: 5 },

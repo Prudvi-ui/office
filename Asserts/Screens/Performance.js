@@ -29,7 +29,7 @@ export default function EmployeePerformanceScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={28} color="#fff" />
+          <Icon name="arrow-left" size={28} color="#fff" style={{ marginTop: 20 }} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Employee Performance</Text>
         <View style={{ width: 28 }} />
@@ -80,7 +80,7 @@ export default function EmployeePerformanceScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#001F54' },
+  container: { flex: 1, backgroundColor: '#fff' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -88,9 +88,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop:20
+    height: 80
   },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  headerTitle: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginTop: 20 },
   content: { padding: 15 },
   summaryCard: {
     backgroundColor: '#fff',

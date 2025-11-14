@@ -36,7 +36,7 @@ export default function CalendarWithHolidays({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()}>
+        <TouchableOpacity onPress={() => navigation?.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Festival & Holidays</Text>
@@ -47,10 +47,12 @@ export default function CalendarWithHolidays({ navigation }) {
       <Calendar
         onMonthChange={(month) => setSelectedMonth(month.month)}
         theme={{
-          selectedDayBackgroundColor: '#001F54',
-          todayTextColor: '#001F54',
-          arrowColor: '#001F54',
-          monthTextColor: '#001F54',
+          selectedDayBackgroundColor: '#0c1247',
+          todayTextColor: '#0c1247',
+          arrowColor: '#0c1247',
+          monthTextColor: '#0c1247',
+          dayTextColor: '#0c1247'
+
         }}
         style={styles.calendar}
       />
@@ -60,8 +62,8 @@ export default function CalendarWithHolidays({ navigation }) {
         <Text style={styles.subHeader}>
           {filteredHolidays.length > 0
             ? `Festivals & Holidays in ${new Date(2025, selectedMonth - 1).toLocaleString('default', {
-                month: 'long',
-              })}`
+              month: 'long',
+            })}`
             : 'No Holidays This Month'}
         </Text>
 
@@ -85,7 +87,7 @@ export default function CalendarWithHolidays({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#001F54',
+    backgroundColor: '#fff',
   },
   header: {
     backgroundColor: '#001F54',
@@ -94,18 +96,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    marginTop:20
+    height: 80
+
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#fff',
+    marginTop: 20
   },
   calendar: {
     borderRadius: 10,
     marginHorizontal: 10,
     marginTop: 10,
     elevation: 2,
+    borderColor: '#0c1247',
+    borderWidth: 2,
+    borderRadius: 10,
+    color: '#0c1247'
   },
   holidayContainer: {
     flex: 1,
@@ -124,6 +132,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     elevation: 2,
+    borderWidth: 2,
+    borderColor: '#0c1247'
   },
   holidayName: {
     fontSize: 16,

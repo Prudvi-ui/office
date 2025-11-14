@@ -34,7 +34,7 @@ export default function NotificationScreen({ route, navigation }) {
     notifications && notifications.length > 0 ? notifications : defaultNotifications;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#001F54' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* 🔹 Header Section */}
       <View
         style={{
@@ -46,10 +46,10 @@ export default function NotificationScreen({ route, navigation }) {
           // borderBottomWidth: 1,
           borderColor: '#eee',
           elevation: 3,
-          marginTop: 20
+          height: 80
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text
@@ -58,6 +58,7 @@ export default function NotificationScreen({ route, navigation }) {
             fontWeight: 'bold',
             color: '#fff',
             marginLeft: 16,
+            marginTop: 20
           }}
         >
           Notifications
@@ -65,7 +66,7 @@ export default function NotificationScreen({ route, navigation }) {
       </View>
 
       {/* 🔹 Notifications List */}
-      <ScrollView style={{ flex: 1, backgroundColor: '#001F54', padding: 16 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
         {displayNotifications.map((note, idx) => (
           <View
             key={idx}

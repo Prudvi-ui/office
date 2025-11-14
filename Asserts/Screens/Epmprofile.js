@@ -21,7 +21,7 @@ const EmployeeProfile = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0c1247' }}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       {/* Header with Back Arrow */}
       <View style={styles.headerBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -35,13 +35,13 @@ const EmployeeProfile = ({ navigation }) => {
         {/* Profile Header */}
 
         <View style={styles.header}>
-          <View style={{flexDirection:'row',alignItems:"center",left:26}}>
+          <View style={{ flexDirection: 'row', alignItems: "center", left: 26 }}>
             <Image source={{ uri: employee.image }} style={styles.profileImage} />
-            <TouchableOpacity style={{ alignItems: 'flex-end', margin: 10 }} onPress={()=> navigation.navigate("SingleEmployee")}>
+            <TouchableOpacity style={{ alignItems: 'flex-end', margin: 10 }} onPress={() => navigation.navigate("SingleEmployee")}>
               <Icon
                 name={"pencil"}
                 size={24}
-                color="#fff"
+                color="#0c1247"
               />
             </TouchableOpacity>
           </View>
@@ -116,14 +116,14 @@ const EmployeeProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   headerBar: {
     backgroundColor: '#0c1247',
-    height: 70,
+    height: 80,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     elevation: 4,
     paddingTop: 10,
-    marginTop: 10
+
   },
   headerTitle: {
     color: '#fff',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     paddingVertical: 30,
-    backgroundColor: '#0c1247',
+    backgroundColor: '#fff',
     borderBottomWidth: 0.5,
     borderBottomColor: '#333',
   },
@@ -148,23 +148,25 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#0c1247',
   },
   email: {
     fontSize: 14,
-    color: 'white',
+    color: '#0c1247',
     marginTop: 3,
   },
   detailsContainer: {
-    backgroundColor: '#0c1247',
+    backgroundColor: '#fff',
     margin: 15,
     borderRadius: 10,
     padding: 15,
+    borderWidth: 3,
+    borderColor: '#0c1247'
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#0c1247',
     marginBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#333',
@@ -178,11 +180,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#333',
   },
   label: {
-    color: 'white',
+    color: '#0c1247',
     fontSize: 14,
   },
   value: {
-    color: '#fff',
+    color: '#0c1247',
     fontSize: 14,
     fontWeight: '600',
   },

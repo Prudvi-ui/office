@@ -4,13 +4,12 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Alert,
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from "react-native-toast-message";
+import Toast from 'react-native-toast-message';
 
 export default function App({ navigation }) {
   const defaultActiveFields = [
@@ -33,18 +32,15 @@ export default function App({ navigation }) {
   const [viewType, setViewType] = useState('Active');
   const [selectedProject, setSelectedProject] = useState('');
   const [searchText, setSearchText] = useState('');
-  const [Timeout, setTimeout] = useState(0);
 
   const handleRemoveField = (fieldToRemove) => {
     const updatedFormData = { ...formData };
     delete updatedFormData[fieldToRemove];
 
     if (viewType === 'Active') {
-      const updatedFields = activeFields.filter((field) => field !== fieldToRemove);
-      setActiveFields(updatedFields);
+      setActiveFields(activeFields.filter((field) => field !== fieldToRemove));
     } else {
-      const updatedFields = pastFields.filter((field) => field !== fieldToRemove);
-      setPastFields(updatedFields);
+      setPastFields(pastFields.filter((field) => field !== fieldToRemove));
     }
 
     setFormData(updatedFormData);
@@ -55,78 +51,75 @@ export default function App({ navigation }) {
   };
 
   const isDefaultField = (index) =>
-    viewType === 'Active' ? index < defaultActiveFields.length : index < defaultPastFields.length;
+    viewType === 'Active'
+      ? index < defaultActiveFields.length
+      : index < defaultPastFields.length;
 
-  const Project = async (selectedProject) => {
-  try {
-    await AsyncStorage.setItem('ProjectName', selectedProject);
-
-    // ✅ Success Toast
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: 'Project name stored successfully 🎉',
-      position: 'bottom',
-    });
-  } catch (error) {
-    console.error('Storage Error:', error);
-
-    // ❌ Error Toast
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'Project name not stored ❌',
-      position: 'bottom',
-    });
-  }
-};
+  const storeProject = async (selectedProject) => {
+    try {
+      await AsyncStorage.setItem('ProjectName', selectedProject);
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Project name stored successfully 🎉',
+        position: 'bottom',
+      });
+    } catch (error) {
+      console.error('Storage Error:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Project name not stored ❌',
+        position: 'bottom',
+      });
+    }
+  };
 
   useEffect(() => {
     if (selectedProject) {
-      Project(selectedProject);
+      storeProject(selectedProject);
     }
   }, [selectedProject]);
 
   const currentFields = viewType === 'Active' ? activeFields : pastFields;
-  const filteredFields = currentFields.filter(field =>
+  const filteredFields = currentFields.filter((field) =>
     field.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const handleProjectPress = (placeholder) => {
+    // Stay on same screen if same project tapped
+    if (selectedProject === placeholder) {
+      return;
+    }
+
+    setSelectedProject(placeholder);
+    const targetScreen = viewType === 'Active' ? 'AWActive' : 'AWPast';
+    navigation.navigate(targetScreen);
+  };
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-      {/* Header */}
+      {/* HEADER */}
       <View
         style={{
-          height: 100,
           backgroundColor: '#0c1247',
+          paddingTop: 40,
+          paddingBottom: 15,
           flexDirection: 'row',
-          justifyContent: 'space-between',
           alignItems: 'center',
+          justifyContent: 'space-between',
           paddingHorizontal: 20,
-        }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
-        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold', marginTop: 20 }}>
+
+        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
           App & Web Development
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: '#0c1247',
-            borderColor: 'white',
-            // borderWidth: 2,
-            // borderTopLeftRadius: 20,
-            // borderBottomLeftRadius: 20,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            elevation: 10,
-            shadowColor: 'white',
-            shadowOffset: { width: 3, height: 3 },
-            shadowOpacity: 0.4,
-            shadowRadius: 4,
-            marginTop: 20
-          }}>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <TouchableOpacity
             onPress={() => {
               const targetScreen = viewType === 'Active' ? 'AWActive' : 'AWPast';
@@ -138,41 +131,43 @@ export default function App({ navigation }) {
               color="white"
               size={26}
               style={{
-                marginRight: 10,
                 borderWidth: 2,
                 borderColor: 'white',
-                borderRadius: 100,
-                padding: 3,
+                borderRadius: 50,
+                padding: 4,
               }}
             />
           </TouchableOpacity>
-          <Icon onPress={() => navigation.navigate('Notification')}
-            name="bell"
-            color="white"
-            size={26}
-            style={{
-              borderWidth: 2,
-              borderColor: 'white',
-              borderRadius: 100,
-              padding: 3,
-            }}
-          />
+
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+            <Icon
+              name="bell"
+              color="white"
+              size={26}
+              style={{
+                borderWidth: 2,
+                borderColor: 'white',
+                borderRadius: 50,
+                padding: 4,
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
 
-      {/* White Card Section */}
+      {/* BODY */}
       <View
         style={{
           backgroundColor: 'white',
           width: '100%',
-          height: '100%',
+          minHeight: '100%',
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
           padding: 20,
           alignItems: 'center',
-        }}>
-
-        {/* Toggle Buttons */}
+        }}
+      >
+        {/* TOGGLE BUTTONS */}
         <View
           style={{
             flexDirection: 'row',
@@ -181,7 +176,8 @@ export default function App({ navigation }) {
             backgroundColor: '#f0f0f0',
             borderRadius: 10,
             overflow: 'hidden',
-          }}>
+          }}
+        >
           <TouchableOpacity
             onPress={() => setViewType('Active')}
             style={{
@@ -189,15 +185,18 @@ export default function App({ navigation }) {
               paddingHorizontal: 30,
               backgroundColor: viewType === 'Active' ? '#0c1247' : '#e0e0e0',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <Text
               style={{
                 color: viewType === 'Active' ? 'white' : '#0c1247',
                 fontWeight: 'bold',
-              }}>
+              }}
+            >
               Active
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             onPress={() => setViewType('Past')}
             style={{
@@ -205,18 +204,20 @@ export default function App({ navigation }) {
               paddingHorizontal: 30,
               backgroundColor: viewType === 'Past' ? '#0c1247' : '#e0e0e0',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <Text
               style={{
                 color: viewType === 'Past' ? 'white' : '#0c1247',
                 fontWeight: 'bold',
-              }}>
+              }}
+            >
               Past
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* 🔍 Search Bar */}
+        {/* SEARCH BAR */}
         <View
           style={{
             width: '100%',
@@ -227,7 +228,8 @@ export default function App({ navigation }) {
             borderWidth: 1,
             borderRadius: 20,
             paddingHorizontal: 10,
-          }}>
+          }}
+        >
           <Icon name="magnify" size={24} color="#0c1247" style={{ marginRight: 8 }} />
           <TextInput
             style={{
@@ -243,7 +245,7 @@ export default function App({ navigation }) {
           />
         </View>
 
-        {/* List of Fields */}
+        {/* PROJECT LIST */}
         {filteredFields.map((placeholder, index) => {
           const isSelected = selectedProject === placeholder;
           const isDefault = isDefaultField(currentFields.indexOf(placeholder));
@@ -252,14 +254,11 @@ export default function App({ navigation }) {
             <TouchableOpacity
               key={`${placeholder}-${index}`}
               style={{ width: '100%', marginBottom: 15 }}
-              onPress={() => {
-                setSelectedProject(placeholder);
-                navigation.navigate(viewType === 'Active' ? 'AWActive' : 'AWPast');
-                setTimeout(() => setSelectedProject(''), 500);
-
-              }}>
+              onPress={() => handleProjectPress(placeholder)}
+              activeOpacity={0.8}
+            >
               <LinearGradient
-                colors={isSelected ? ['#FF5C00', 'white'] : ['white', 'white']}
+                colors={isSelected ? ['#E77D41', '#FFFFFF'] : ['#FFFFFF', '#FFFFFF']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -275,7 +274,8 @@ export default function App({ navigation }) {
                   shadowOffset: { width: 3, height: 3 },
                   shadowOpacity: 0.3,
                   shadowRadius: 4,
-                }}>
+                }}
+              >
                 <Icon
                   name="file-document"
                   size={22}
@@ -288,7 +288,8 @@ export default function App({ navigation }) {
                     fontSize: 16,
                     fontWeight: '500',
                     flex: 1,
-                  }}>
+                  }}
+                >
                   {placeholder}
                 </Text>
                 <Icon

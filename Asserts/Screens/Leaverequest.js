@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function UpdateLeaveForm({ navigation }) {
   const [leaveFrom, setLeaveFrom] = useState(new Date());
@@ -29,7 +30,6 @@ export default function UpdateLeaveForm({ navigation }) {
     'Emergency Leave',
   ];
 
-  // --- Date change handlers (consistent on both platforms)
   const onChangeFrom = (event, selectedDate) => {
     if (selectedDate) setLeaveFrom(selectedDate);
     setShowFromPicker(false);
@@ -47,37 +47,31 @@ export default function UpdateLeaveForm({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={26} color="#fff" />
+          <Icon name="arrow-left" size={26} color="#fff" style={{ marginTop: 10 }} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Update Leave Form</Text>
-        <View />
+        <View style={{ width: 26 }} />
       </View>
 
       {/* Main content */}
       <View style={styles.container}>
         {/* Leave From */}
         <Text style={styles.label}>Leave from</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowFromPicker(true)}>
+        <TouchableOpacity style={styles.input} onPress={() => setShowFromPicker(true)}>
           <Text style={styles.inputText}>{formatDate(leaveFrom)}</Text>
           <Icon name="calendar" size={22} color="#555" />
         </TouchableOpacity>
 
         {/* Leave To */}
         <Text style={styles.label}>Leave to</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setShowToPicker(true)}>
+        <TouchableOpacity style={styles.input} onPress={() => setShowToPicker(true)}>
           <Text style={styles.inputText}>{formatDate(leaveTo)}</Text>
           <Icon name="calendar" size={22} color="#555" />
         </TouchableOpacity>
 
         {/* Leave Type */}
         <Text style={styles.label}>Leave type</Text>
-        <TouchableOpacity
-          style={styles.input}
-          onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.input} onPress={() => setModalVisible(true)}>
           <Text style={styles.inputText}>{leaveType}</Text>
           <Icon name="menu-down" size={22} color="#555" />
         </TouchableOpacity>
@@ -94,11 +88,20 @@ export default function UpdateLeaveForm({ navigation }) {
 
         {/* Buttons */}
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={[styles.button, styles.cancelBtn]}>
-            <Text style={styles.cancelText}>Cancel Leave</Text>
+          <TouchableOpacity style={{ flex: 1, marginRight: 8 }}>
+            <LinearGradient
+              colors={['#E77D41', '#FFD6A5']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.button}>
+              <Text style={styles.cancelText}>Cancel Leave</Text>
+            </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.updateBtn]}>
-            <Text style={styles.updateText}>Update</Text>
+
+          <TouchableOpacity style={{ flex: 1, marginLeft: 8 }}>
+            <View style={[styles.button, styles.updateBtn]}>
+              <Text style={styles.updateText}>Update</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -107,11 +110,9 @@ export default function UpdateLeaveForm({ navigation }) {
       <Modal
         transparent
         visible={modalVisible}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setModalVisible(false)}>
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setModalVisible(false)}>
+        <Pressable style={styles.modalOverlay} onPress={() => setModalVisible(false)}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Select Leave Type</Text>
             {leaveOptions.map((type) => (
@@ -134,15 +135,16 @@ export default function UpdateLeaveForm({ navigation }) {
         <DateTimePicker
           value={leaveFrom}
           mode="date"
-          display="default"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={onChangeFrom}
         />
       )}
+
       {showToPicker && (
         <DateTimePicker
           value={leaveTo}
           mode="date"
-          display="default"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={onChangeTo}
         />
       )}
@@ -151,55 +153,65 @@ export default function UpdateLeaveForm({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#001F54' },
+  safeArea: { flex: 1, backgroundColor: '#fff' },
+
   header: {
     backgroundColor: '#001F54',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
-    marginTop: 20,
+    paddingHorizontal: 15,
+    paddingTop: 10,
+    height: 80,
   },
-  headerTitle: { color: '#fff', fontSize: 18, fontWeight: '600' },
+  headerTitle: { color: '#fff', fontSize: 18, fontWeight: '600', marginTop: 10 },
+
   container: { padding: 20 },
-  label: { color: 'white', fontSize: 15, fontWeight: '500', marginTop: 15 },
+
+  label: {
+    color: '#001F54',
+    fontSize: 15,
+    fontWeight: '500',
+    marginTop: 15,
+  },
+
   input: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'white',
+    borderWidth: 2,
+    borderColor: '#0c1247',
     borderRadius: 6,
     padding: 12,
     marginTop: 6,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
   inputText: { color: 'black', fontSize: 15 },
+
   inputBox: {
-    borderWidth: 1,
-    borderColor: 'white',
+    borderWidth: 2,
+    borderColor: '#0c1247',
     borderRadius: 6,
     marginTop: 6,
     padding: 10,
     textAlignVertical: 'top',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
+
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 25,
   },
+
   button: {
-    flex: 1,
     borderRadius: 6,
     paddingVertical: 12,
     alignItems: 'center',
-    marginHorizontal: 4,
   },
-  cancelBtn: { backgroundColor: 'orange' },
-  updateBtn: { backgroundColor: 'white' },
-  cancelText: { color: 'black', fontWeight: '600' },
-  updateText: { color: 'black', fontWeight: '600' },
+  cancelText: { color: '#001F54', fontWeight: '600' },
+  updateBtn: { backgroundColor: '#0c1247' },
+  updateText: { color: 'white', fontWeight: '600' },
 
   modalOverlay: {
     flex: 1,
@@ -213,6 +225,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 20,
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 18,

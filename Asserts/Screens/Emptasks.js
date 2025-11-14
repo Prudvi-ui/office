@@ -68,7 +68,7 @@ export default function ProjectTasks({ navigation }) {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Project Tasks</Text>
@@ -135,7 +135,7 @@ export default function ProjectTasks({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#001F54',
+    backgroundColor: '#fff',
   },
   header: {
     flexDirection: 'row',
@@ -144,12 +144,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop: 20,
+    height: 80
   },
   headerTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+    marginTop: 20
   },
   card: {
     backgroundColor: '#fff',
@@ -162,6 +163,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
+    borderWidth: 2,
+    borderColor: '#0c1247'
   },
   title: {
     fontSize: 16,

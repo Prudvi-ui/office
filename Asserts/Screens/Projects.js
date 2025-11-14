@@ -119,7 +119,7 @@ export default function Dashboard({ navigation }) {
 
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
                     <Icon name="arrow-left" size={26} color="#fff" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Employee Dashboard</Text>
@@ -145,7 +145,7 @@ export default function Dashboard({ navigation }) {
                                 </View>
                             </View>
                             <TouchableOpacity style={styles.bellIcon}>
-                                <Icon name="bell-outline" size={22} color="#000" />
+                                <Icon name="bell-outline" size={24} color="#0c1247" />
                             </TouchableOpacity>
                         </View>
 
@@ -209,7 +209,7 @@ export default function Dashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#001F54' },
+    container: { flex: 1, backgroundColor: '#fff' },
 
     // Header
     header: {
@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 15,
         paddingVertical: 12,
-        marginTop: 20,
+        height: 80
     },
-    headerTitle: { color: '#fff', fontSize: 18, fontWeight: '600' },
+    headerTitle: { color: '#fff', fontSize: 18, fontWeight: '600', marginTop: 20 },
 
     profileSection: {
         flexDirection: 'row',
@@ -238,6 +238,8 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 10,
         elevation: 2,
+        borderColor: '#0c1247',
+        borderWidth: 1
     },
 
     listRow: {
@@ -254,6 +256,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         elevation: 3,
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#0c1247'
     },
     cardIcon: {
         backgroundColor: '#EAF1FF',
@@ -274,7 +278,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     sectionTitle: { fontSize: 17, fontWeight: '600', color: 'white' },
-    seeMore: { color: '#007AFF', fontSize: 13 },
+    seeMore: { color: '#0c1247', fontSize: 13 },
 
     taskCard: {
         width: 220,

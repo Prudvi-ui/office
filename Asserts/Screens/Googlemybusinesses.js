@@ -335,7 +335,7 @@ export default function Googlemybusinesses() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#0c1247" },
+  container: { flex: 1, backgroundColor: "white" },
   header: {
     flexDirection: "row",
     alignItems: "center",

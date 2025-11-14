@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Calendar } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const STORAGE_KEY = "@ssl_list";
 
@@ -75,7 +76,11 @@ export default function SSLdetails() {
 
   const handleAddOrUpdate = () => {
     if (!sslName || !provider || !status || !expiration) {
-      Alert.alert("Please fill in all fields");
+      Toast.show({
+        type: "error",
+        text1: "Missing Fields ⚠️",
+        text2: "Please fill in all fields before saving.",
+      });
       return;
     }
 
@@ -84,6 +89,12 @@ export default function SSLdetails() {
         s.id === editId ? { ...s, sslName, provider, status, expiration } : s
       );
       saveSSLs(updated);
+
+      Toast.show({
+        type: "success",
+        text1: "SSL Updated 🔒",
+        text2: "SSL details have been updated successfully.",
+      });
     } else {
       const newSSL = {
         id: Date.now().toString(),
@@ -93,6 +104,12 @@ export default function SSLdetails() {
         expiration,
       };
       saveSSLs([...sslList, newSSL]);
+
+      Toast.show({
+        type: "success",
+        text1: "SSL Added ✅",
+        text2: "New SSL certificate has been added successfully.",
+      });
     }
 
     resetForm();
@@ -260,7 +277,7 @@ export default function SSLdetails() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#0c1247" },
+  container: { flex: 1, backgroundColor: "white" },
   header: {
     flexDirection: "row",
     alignItems: "center",

@@ -12,7 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const EmployeeScreen = ({navigation}) => {
+const EmployeeScreen = ({ navigation }) => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,7 +82,7 @@ const EmployeeScreen = ({navigation}) => {
   }, []);
 
   const renderEmployee = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("SingleEmployee")}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("SingleEmployee")}>
       <Image
         source={
           item.profileImage
@@ -113,7 +113,7 @@ const EmployeeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{marginTop:20}}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Project Tasks</Text>
@@ -138,20 +138,21 @@ const EmployeeScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#001F54' },
-   header: {
+  container: { flex: 1, backgroundColor: 'white' },
+  header: {
+    height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#001F54',
     paddingVertical: 14,
     paddingHorizontal: 15,
     justifyContent: 'space-between',
-    marginTop:20
   },
   headerTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+    marginTop: 20
   },
   card: {
     flexDirection: 'row',

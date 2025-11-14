@@ -73,7 +73,7 @@ export default function NoticeBoard({ navigation }) {
       {/* Header Section */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={26} color="#fff" />
+          <Icon name="arrow-left" size={26} color="#fff" style={{ marginTop: 20 }} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notice</Text>
         <View style={{ width: 26 }} /> {/* spacing placeholder */}
@@ -95,7 +95,7 @@ export default function NoticeBoard({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#001F54',
+    backgroundColor: '#fff',
   },
   header: {
     backgroundColor: '#001F54',
@@ -104,12 +104,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    marginTop:20
+    height: 80
   },
   headerTitle: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+    marginTop: 20
   },
   listContainer: {
     padding: 10,

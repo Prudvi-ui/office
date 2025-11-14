@@ -7,8 +7,11 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import LinearGradient from "react-native-linear-gradient";
 
 export default function SalaryDetailsScreen({ navigation }) {
   const [salary, setSalary] = useState({
@@ -23,81 +26,98 @@ export default function SalaryDetailsScreen({ navigation }) {
 
   const netSalary =
     parseFloat(salary.basicSalary) -
-    // parseFloat(salary.hra) +
+    parseFloat(salary.deductions) +
     parseFloat(salary.allowances);
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20 }}>
           <Icon name="arrow-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Salary Details</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Employee Info */}
-        <View style={styles.card}>
-          <Text style={styles.label}>Employee Name</Text>
-          <TextInput style={styles.input} value={salary.name} editable={false} />
+      {/* ✅ KeyboardAvoidingView to handle keyboard push */}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+          {/* Employee Info */}
+          <View style={styles.card}>
+            <Text style={styles.label}>Employee Name</Text>
+            <TextInput style={styles.input} value={salary.name} editable={false} />
 
-          <Text style={styles.label}>Employee ID</Text>
-          <TextInput style={styles.input} value={salary.empId} editable={false} />
+            <Text style={styles.label}>Employee ID</Text>
+            <TextInput style={styles.input} value={salary.empId} editable={false} />
 
-          <Text style={styles.label}>Designation</Text>
-          <TextInput style={styles.input} value={salary.designation} editable={false} />
-        </View>
+            <Text style={styles.label}>Designation</Text>
+            <TextInput style={styles.input} value={salary.designation} editable={false} />
+          </View>
 
-        {/* Salary Breakdown */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Salary Breakdown</Text>
+          {/* Salary Breakdown */}
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Salary Breakdown</Text>
 
-          <Text style={styles.label}>Basic Salary (₹)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={salary.basicSalary}
-            onChangeText={(text) => setSalary({ ...salary, basicSalary: text })}
-          />
+            <Text style={styles.label}>Basic Salary (₹)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={salary.basicSalary}
+              onChangeText={(text) => setSalary({ ...salary, basicSalary: text })}
+              editable={false}
+            />
 
-          <Text style={styles.label}>HRA (₹)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={salary.hra}
-            onChangeText={(text) => setSalary({ ...salary, hra: text })}
-          />
+            <Text style={styles.label}>HRA (₹)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={salary.hra}
+              onChangeText={(text) => setSalary({ ...salary, hra: text })}
+              editable={false}
+            />
 
-          <Text style={styles.label}>Allowances (₹)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={salary.allowances}
-            onChangeText={(text) => setSalary({ ...salary, allowances: text })}
-          />
+            <Text style={styles.label}>Allowances (₹)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={salary.allowances}
+              onChangeText={(text) => setSalary({ ...salary, allowances: text })}
+              editable={false}
+            />
 
-          <Text style={styles.label}>Deductions (₹)</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            value={salary.deductions}
-            onChangeText={(text) => setSalary({ ...salary, deductions: text })}
-          />
-        </View>
+            <Text style={styles.label}>Deductions (₹)</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={salary.deductions}
+              onChangeText={(text) => setSalary({ ...salary, deductions: text })}
+              editable={false}
+            />
+          </View>
 
-        {/* Net Salary */}
-        <View style={styles.netCard}>
-          <Text style={styles.netTitle}>Net Salary</Text>
-          <Text style={styles.netAmount}>₹{netSalary}</Text>
-        </View>
+          {/* Net Salary */}
+          <View style={styles.netCard}>
+            <Text style={styles.netTitle}>Net Salary</Text>
+            <Text style={styles.netAmount}>₹{netSalary}</Text>
+          </View>
 
-        {/* Buttons */}
-        <TouchableOpacity style={styles.downloadBtn}>
-          <Icon name="file-pdf-box" size={22} color="#fff" />
-          <Text style={styles.downloadText}>Download Payslip</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          {/* Download Button */}
+          <TouchableOpacity>
+            <LinearGradient
+              colors={["#E77D41", "#FFFFFF"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.downloadBtn}
+            >
+              <Icon name="file-pdf-box" size={22} color="#fff" />
+              <Text style={styles.downloadText}>Download Payslip</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -105,23 +125,25 @@ export default function SalaryDetailsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c1247",
+    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#0c1247",
     padding: 15,
-    marginTop:20
+    height: 80,
   },
   headerTitle: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 10,
+    marginTop: 20,
   },
   scroll: {
     padding: 15,
+    paddingBottom: 40,
   },
   card: {
     backgroundColor: "#fff",
@@ -139,8 +161,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
+    borderWidth: 2,
+    borderColor: "#0c1247",
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
@@ -153,7 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   netCard: {
-    backgroundColor: "#27AE60",
+    backgroundColor: "#0c1247",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -176,6 +198,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#0c1247",
+    marginBottom: 30,
   },
   downloadText: {
     color: "#fff",

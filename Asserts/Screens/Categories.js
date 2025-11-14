@@ -6,20 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Platform,
   Modal,
   BackHandler,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from "react-native-toast-message";
-
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// ✅ Default Cards
 const defaultData = [
   { id: '1', title: 'Marketing', nav: 'MarketingList', isRemovable: false },
   { id: '2', title: 'Clients', nav: 'Clients', isRemovable: false },
-  { id: '3', title: 'WordPress', nav: 'wordpress', isRemovable: false },
+  { id: '3', title: 'Digital marketing payments', nav: 'wordpress', isRemovable: false },
   { id: '4', title: 'App & Web Development', nav: 'AppAndWeb', isRemovable: false },
   { id: '5', title: 'App Development', nav: 'AppDevelopment', isRemovable: false },
   { id: '6', title: 'Web Development', nav: 'WebDevelopment', isRemovable: false },
@@ -27,10 +26,11 @@ const defaultData = [
   { id: '8', title: 'Domain', nav: 'Domain', isRemovable: false },
 ];
 
+// ✅ Icon mapping
 const iconMap = {
   Marketing: 'bullhorn',
   Clients: 'account-group',
-  WordPress: 'wordpress',
+  'Digital marketing payments': 'google-ads',
   'App & Web Development': 'web',
   'App Development': 'cellphone',
   'Web Development': 'laptop',
@@ -39,18 +39,18 @@ const iconMap = {
 };
 
 export default function Categories({ navigation, route }) {
-  // ✅ Ensure route.params always exists
   const params = route?.params || {};
   const isAdmin = params.role === 'admin';
 
   const [cards, setCards] = useState(defaultData);
   const [modalVisible, setModalVisible] = useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [newCardTitle, setNewCardTitle] = useState('');
+  const [activeCard, setActiveCard] = useState(null);
 
   // ✅ Add new card
   const addNewCard = () => {
     if (!newCardTitle.trim()) {
-      // ⚠️ Validation Toast
       Toast.show({
         type: 'error',
         text1: 'Validation',
@@ -77,7 +77,15 @@ export default function Categories({ navigation, route }) {
     setCards((prev) => prev.filter((card) => card.id !== id));
   };
 
-  // ✅ BackHandler (always runs)
+  // ✅ Logout Modal Handler
+  const handleLogout = async () => setLogoutModalVisible(true);
+  const confirmLogout = async () => {
+    setLogoutModalVisible(false);
+    await AsyncStorage.clear();
+    navigation.replace('Login');
+  };
+
+  // ✅ Back handler
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
@@ -89,74 +97,69 @@ export default function Categories({ navigation, route }) {
           return true;
         }
       };
-
       const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => backHandler.remove();
     }, [navigation])
   );
 
-  // ✅ Logout
-  const handleLogout = () => {
-    // ⚠️ Confirmation Toast
-    Toast.show({
-      type: 'info',
-      text1: 'Logout Requested',
-      text2: 'Logging out in 2 seconds... 👋',
-      position: 'bottom',
-    });
-
-    // Auto logout after delay (simulating confirmation)
-    setTimeout(() => {
-      navigation.replace('Login');
-
-      Toast.show({
-        type: 'success',
-        text1: 'Logged Out',
-        text2: 'You have been logged out successfully.',
-        position: 'bottom',
-      });
-    }, 2000);
-  };
-  // ✅ Card renderer
+  // ✅ Render each card
   const renderItem = ({ item }) => {
     const iconName = iconMap[item.title] || 'folder';
+    const isActive = activeCard === item.id;
+
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate(item.nav)}
+        onPress={() => {
+          setActiveCard(item.id);
+          navigation.navigate(item.nav);
+        }}
         style={{ width: '48%', marginBottom: 15 }}
       >
         <Card
           style={{
             height: 120,
-            borderRadius: 10,
+            borderRadius: 16,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'white',
+            backgroundColor: isActive ? '#0c1247' : 'white',
             padding: 10,
-            borderWidth: 2,
-            borderColor: '#0c1247',
-            ...Platform.select({
-              ios: {
-                shadowColor: '#0c1247',
-                shadowOffset: { width: 2, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-              },
-              android: {
-                elevation: 6,
-              },
-            }),
+            borderWidth: 1,
+            borderColor: 'rgba(0, 20, 70, 0.25)',
+            // LEFT border
+            borderLeftWidth: 2,
+            borderLeftColor: '#001F54',
+
+            // RIGHT border
+            borderRightWidth: 8,
+            borderRightColor: '#001F54',
+
+            // BOTTOM border (if you want)
+            borderBottomWidth: 7,
+            borderBottomColor: '#082049ff',
+            borderTopWidth: 2,
+            borderTopColor: '#082049ff',
+            // Shadow
+            shadowColor: '#160534ff',
+            shadowOffset: { width: 8, height: 10 },
+            shadowOpacity: 0.45,
+            shadowRadius: 14,
+            elevation: 20,
           }}
         >
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name={iconName} size={30} color="#0c1247" style={{ marginBottom: 10 }} />
+            <Icon
+              name={iconName}
+              size={30}
+              color={isActive ? 'white' : '#E77D41'}
+              style={{ marginBottom: 10 }}
+            />
           </View>
 
           <Text
             style={{
               fontSize: 15,
               textAlign: 'center',
-              color: '#0c1247',
+              color: isActive ? 'white' : '#0c1247',
               fontWeight: 'bold',
             }}
           >
@@ -166,12 +169,7 @@ export default function Categories({ navigation, route }) {
           {item.isRemovable && isAdmin && (
             <TouchableOpacity
               onPress={() => removeCard(item.id)}
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                padding: 4,
-              }}
+              style={{ position: 'absolute', top: 10, right: 10, padding: 4 }}
             >
               <Icon name="trash-can" size={20} color="#ff3b3b" />
             </TouchableOpacity>
@@ -182,7 +180,7 @@ export default function Categories({ navigation, route }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0c1247' }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       {/* Header */}
       <View
         style={{
@@ -211,26 +209,26 @@ export default function Categories({ navigation, route }) {
 
       {/* Cards */}
       <ScrollView>
-        <View style={{ padding: 10 }}>
+        <View style={{ flex: 1, paddingHorizontal: 12, paddingTop: 15 }}>
           <FlatList
             data={cards}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             numColumns={2}
-            scrollEnabled={false}
-            columnWrapperStyle={{ gap: 10 }}
-            contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              marginBottom: 15, // GAP between rows
+            }}
+            contentContainerStyle={{
+              paddingBottom: 120,
+            }}
           />
         </View>
       </ScrollView>
 
-      {/* Add Card Modal */}
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
+      {/* Add New Card Modal */}
+      <Modal visible={modalVisible} transparent animationType="slide">
         <View
           style={{
             flex: 1,
@@ -248,14 +246,7 @@ export default function Categories({ navigation, route }) {
               elevation: 10,
             }}
           >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                marginBottom: 10,
-                color: '#0c1247',
-              }}
-            >
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#0c1247' }}>
               Add New Card
             </Text>
 
@@ -272,13 +263,7 @@ export default function Categories({ navigation, route }) {
               }}
             />
 
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                gap: 10,
-              }}
-            >
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 10 }}>
               <TouchableOpacity
                 onPress={() => setModalVisible(false)}
                 style={{
@@ -307,7 +292,39 @@ export default function Categories({ navigation, route }) {
         </View>
       </Modal>
 
-      {/* Floating Add Button for Admin */}
+      {/* ✅ Logout Modal */}
+      <Modal
+        transparent
+        animationType="fade"
+        visible={logoutModalVisible}
+        onRequestClose={() => setLogoutModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Icon name="logout" size={40} color="red" />
+            <Text style={styles.modalTitle}>Logout Confirmation</Text>
+            <Text style={styles.modalText}>Are you sure you want to logout?</Text>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalBtn, { backgroundColor: '#ccc' }]}
+                onPress={() => setLogoutModalVisible(false)}
+              >
+                <Text style={{ color: '#000', fontWeight: '600' }}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.modalBtn, { backgroundColor: 'red' }]}
+                onPress={confirmLogout}
+              >
+                <Text style={{ color: '#fff', fontWeight: '600' }}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Floating Add Button */}
       {isAdmin && (
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
@@ -327,3 +344,46 @@ export default function Categories({ navigation, route }) {
     </View>
   );
 }
+
+// ✅ Styles
+const styles = {
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalBox: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#0c1247',
+    marginTop: 10,
+  },
+  modalText: {
+    fontSize: 15,
+    color: '#333',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    marginTop: 20,
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+};

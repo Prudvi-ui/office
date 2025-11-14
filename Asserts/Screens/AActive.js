@@ -426,7 +426,7 @@ const styles = {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3, borderColor: "#0c1247", borderWidth: 2
   },
   textInput: {
     color: '#000',

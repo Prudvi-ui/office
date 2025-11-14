@@ -309,6 +309,7 @@ const styles = {
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    borderColor: "#0c1247", borderWidth: 2
   },
   textInput: {
     color: '#000',
