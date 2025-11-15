@@ -220,7 +220,7 @@ export default function App({ navigation }) {
                 navigation.navigate(viewType === 'Active' ? 'AWActive' : 'AWPast');
               }}>
               <LinearGradient
-                colors={isSelected ? ['#E77D41', '#FFFFFF'] : ['#FFFFFF', '#FFFFFF']}
+                colors={isSelected ? ['#E77D41', '#FFFFFF'] : ['#0c1247', '#0c1247']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -245,7 +245,7 @@ export default function App({ navigation }) {
                 />
                 <Text
                   style={{
-                    color: isSelected ? '#fff' : '#0c1247',
+                    color: isSelected ? '#fff' : '#fff',
                     fontSize: 16,
                     fontWeight: '500',
                     flex: 1,
@@ -255,13 +255,13 @@ export default function App({ navigation }) {
                 <Icon
                   name="chevron-right"
                   size={24}
-                  color={isSelected ? '#fff' : '#0c1247'}
+                  color={isSelected ? '#fff' : '#fff'}
                 />
                 <TouchableOpacity onPress={() => handleRemoveField(placeholder)}>
                   <Icon
                     name="delete"
                     size={22}
-                    color={isSelected ? '#fff' : 'red'}
+                    color={isSelected ? '#fff' : '#fff'}
                     style={{ marginLeft: 8 }}
                   />
                 </TouchableOpacity>

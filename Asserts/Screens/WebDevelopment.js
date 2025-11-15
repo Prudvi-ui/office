@@ -294,7 +294,7 @@ export default function App({ navigation }) {
                 colors={
                   isSelected
                     ? ["#E77D41", "#FFFFFF"]
-                    : ["#FFFFFF", "#FFFFFF"]
+                    : ["#0c1247", "#0c1247"]
                 }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -321,7 +321,7 @@ export default function App({ navigation }) {
                 />
                 <Text
                   style={{
-                    color: isSelected ? "white" : "#0c1247",
+                    color: isSelected ? "white" : "#fff",
                     fontSize: 16,
                     fontWeight: "500",
                     flex: 1,

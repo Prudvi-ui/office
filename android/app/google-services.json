@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "97141039310",
+    "project_id": "maberucreations-967b3",
+    "storage_bucket": "maberucreations-967b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97141039310:android:1c8d578a6244d5531cb09f",
+        "android_client_info": {
+          "package_name": "com.maberu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWkmVUs_LnbDFveTWy4OgqOw6suqEGolg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

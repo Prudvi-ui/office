@@ -159,11 +159,11 @@ const styles = StyleSheet.create({
     borderLeftColor: '#001F54',
 
     // RIGHT border
-    borderRightWidth: 8,
+    borderRightWidth: 10,
     borderRightColor: '#001F54',
 
     // BOTTOM border (if you want)
-    borderBottomWidth: 6,
+    borderBottomWidth: 7,
     borderBottomColor: '#082049ff',
     borderTopWidth: 2,
     borderTopColor: '#082049ff',

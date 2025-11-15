@@ -87,10 +87,7 @@ export default function App({ navigation }) {
   );
 
   const handleProjectPress = (placeholder) => {
-    // Stay on same screen if same project tapped
-    if (selectedProject === placeholder) {
-      return;
-    }
+    if (selectedProject === placeholder) return;
 
     setSelectedProject(placeholder);
     const targetScreen = viewType === 'Active' ? 'AWActive' : 'AWPast';
@@ -258,7 +255,11 @@ export default function App({ navigation }) {
               activeOpacity={0.8}
             >
               <LinearGradient
-                colors={isSelected ? ['#E77D41', '#FFFFFF'] : ['#FFFFFF', '#FFFFFF']}
+                colors={
+                  isSelected
+                    ? ['#E77D41', '#FFFFFF']
+                    : ['#0c1247', '#0c1247']
+                }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -279,12 +280,13 @@ export default function App({ navigation }) {
                 <Icon
                   name="file-document"
                   size={22}
-                  color={isSelected ? 'white' : '#0c1247'}
+                  color="white"
                   style={{ marginRight: 10 }}
                 />
+
                 <Text
                   style={{
-                    color: isSelected ? 'white' : '#0c1247',
+                    color: "white",
                     fontSize: 16,
                     fontWeight: '500',
                     flex: 1,
@@ -292,17 +294,19 @@ export default function App({ navigation }) {
                 >
                   {placeholder}
                 </Text>
+
                 <Icon
                   name="chevron-right"
                   size={24}
-                  color={isSelected ? 'white' : '#0c1247'}
+                  color="white"
                 />
+
                 {!isDefault && (
                   <TouchableOpacity onPress={() => handleRemoveField(placeholder)}>
                     <Icon
                       name="delete"
                       size={22}
-                      color={isSelected ? 'white' : 'red'}
+                      color="red"
                       style={{ marginLeft: 8 }}
                     />
                   </TouchableOpacity>
