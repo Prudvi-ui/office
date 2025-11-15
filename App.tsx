@@ -178,7 +178,7 @@ export default function App() {
   );
 }
 
-
+// ----------------------------Firebase--------------------------------------
 
 // import { useEffect } from 'react';
 // import { Alert, PermissionsAndroid, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
